@@ -28,3 +28,21 @@ fn collect_full_rev() {
         assert_eq!(bytes.get(i), Some(&b), "{:?} at {} is not {}", bytes, i, b);
     }
 }
+
+#[test]
+fn contains_full() {
+    let iter = &mut ByteSet::full().into_iter();
+
+    while let Some(byte) = iter.next() {
+        assert_not_contains!(iter.byte_set, byte);
+    }
+}
+
+#[test]
+fn contains_full_rev() {
+    let iter = &mut ByteSet::full().into_iter();
+
+    while let Some(byte) = iter.next_back() {
+        assert_not_contains!(iter.byte_set, byte);
+    }
+}
