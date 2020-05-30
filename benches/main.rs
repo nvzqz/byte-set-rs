@@ -2,10 +2,22 @@ mod benchmarks;
 mod rand;
 mod util;
 
-criterion::criterion_main! {
-    benchmarks::contains_cached::benches,
-    benchmarks::contains_random::benches,
-    benchmarks::extend_slice::benches,
-    benchmarks::insert::benches,
-    benchmarks::iter::benches,
+fn main() {
+    let mut criterion = criterion::Criterion::default().configure_from_args();
+
+    macro_rules! benchmarks {
+        ($($module:ident,)+) => {
+            $(benchmarks::$module::benches(&mut criterion);)+
+        };
+    }
+
+    benchmarks! {
+        contains_cached,
+        contains_random,
+        extend_slice,
+        insert,
+        iter,
+    }
+
+    criterion.final_summary();
 }

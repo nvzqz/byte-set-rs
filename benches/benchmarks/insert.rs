@@ -4,8 +4,7 @@ use std::collections::{BTreeSet, BinaryHeap, HashSet};
 use crate::util;
 use byte_set::ByteSet;
 
-pub fn benches() {
-    let mut criterion = Criterion::default().configure_from_args();
+pub fn benches(criterion: &mut Criterion) {
     let mut group = criterion.benchmark_group("Insert");
 
     let mut rng = rand::thread_rng();

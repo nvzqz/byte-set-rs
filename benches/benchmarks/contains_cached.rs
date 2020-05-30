@@ -5,8 +5,7 @@ use std::collections::{BTreeSet, HashSet};
 use crate::{rand::Rand, util};
 use byte_set::ByteSet;
 
-pub fn benches() {
-    let mut criterion = Criterion::default().configure_from_args();
+pub fn benches(criterion: &mut Criterion) {
     let mut group = criterion.benchmark_group("Contains (Cached)");
 
     let mut rng = rand::thread_rng();
