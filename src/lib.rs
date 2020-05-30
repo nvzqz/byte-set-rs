@@ -511,6 +511,15 @@ impl From<u8> for ByteSet {
     }
 }
 
+impl From<&[u8]> for ByteSet {
+    #[inline]
+    fn from(bytes: &[u8]) -> Self {
+        let mut set = ByteSet::new();
+        set.extend(bytes);
+        set
+    }
+}
+
 impl Extend<u8> for ByteSet {
     fn extend<T: IntoIterator<Item = u8>>(&mut self, iter: T) {
         iter.into_iter().for_each(|byte| self.insert(byte));
