@@ -5,6 +5,10 @@
 
 use core::{cmp, hash, iter::FromIterator, mem, ops, slice};
 
+// Makes `ByteSet::{rand,try_rand}` simpler to express.
+#[cfg(any(test, feature = "rand"))]
+use rand as rand_core;
+
 #[macro_use]
 mod macros;
 
@@ -102,6 +106,35 @@ impl ByteSet {
     #[must_use]
     pub const fn full() -> Self {
         Self([usize::max_value(); NUM_SLOTS])
+    }
+
+    /// Returns a set containing uniformly-distributed random bytes from `rng`.
+    ///
+    /// This uses [`fill_bytes`] under the hood.
+    ///
+    /// [`fill_bytes`]: https://docs.rs/rand_core/0.5.*/rand_core/trait.RngCore.html#tymethod.fill_bytes
+    #[cfg(any(test, feature = "rand", feature = "rand_core"))]
+    #[inline]
+    pub fn rand<R: rand_core::RngCore>(mut rng: R) -> Self {
+        let mut set = Self::new();
+        rng.fill_bytes(set.as_bytes_mut());
+        set
+    }
+
+    /// Returns a set containing uniformly-distributed random bytes from `rng`,
+    /// or `Err` if `rng` failed.
+    ///
+    /// This uses [`try_fill_bytes`] under the hood.
+    ///
+    /// [`try_fill_bytes`]: https://docs.rs/rand_core/0.5.*/rand_core/trait.RngCore.html#tymethod.try_fill_bytes
+    #[cfg(any(test, feature = "rand", feature = "rand_core"))]
+    #[inline]
+    pub fn try_rand<R: rand_core::RngCore>(
+        mut rng: R,
+    ) -> Result<Self, rand_core::Error> {
+        let mut set = Self::new();
+        rng.try_fill_bytes(set.as_bytes_mut())?;
+        Ok(set)
     }
 
     /// Returns `true` if `self` contains no bytes.
@@ -634,5 +667,16 @@ impl ops::Not for ByteSet {
     #[inline]
     fn not(self) -> Self::Output {
         ByteSet::not(self)
+    }
+}
+
+// Enables `rand::random::<ByteSet>()`.
+#[cfg(any(test, feature = "rand"))]
+impl rand::distributions::Distribution<ByteSet>
+    for rand::distributions::Standard
+{
+    #[inline]
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> ByteSet {
+        ByteSet::rand(rng)
     }
 }
