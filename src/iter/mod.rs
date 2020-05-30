@@ -134,7 +134,8 @@ impl DoubleEndedIterator for Iter {
         for index in range.rev() {
             self.backward_index = index;
 
-            let slot = &mut self.byte_set.0[index];
+            // SAFETY: This invariant is tested.
+            let slot = unsafe { self.byte_set.0.get_unchecked_mut(index) };
 
             if let Some(msb) = pop_msb(slot) {
                 return Some(msb + (index * INDEX_OFFSET) as u8);
