@@ -19,12 +19,16 @@ mod tests_macros;
 #[cfg(test)]
 mod tests;
 
+pub(crate) mod slot;
+
 mod iter;
 pub use iter::Iter;
 
 const SLOT_SIZE: usize = mem::size_of::<usize>();
 
 const NUM_SLOTS: usize = 256 / 8 / SLOT_SIZE;
+
+const LAST_SLOT_INDEX: usize = NUM_SLOTS - 1;
 
 /// An efficient, general-purpose set of [`u8`]s.
 ///
@@ -78,7 +82,7 @@ impl ByteSet {
 
         impl Display for Formatted<'_> {
             fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-                for slot in self.0.as_slots() {
+                for slot in &(self.0).0 {
                     #[cfg(target_pointer_width = "64")]
                     write!(f, "{:064b}", slot)?;
 
@@ -186,6 +190,51 @@ impl ByteSet {
     #[inline]
     pub fn clear(&mut self) {
         *self = ByteSet::new();
+    }
+
+    /// Returns the first (least) byte in `self`, or `None` if `self` is empty.
+    pub fn first(&self) -> Option<u8> {
+        for (i, &slot) in self.0.iter().enumerate() {
+            if let Some(lsb) = slot::lsb(slot) {
+                return Some(lsb + (i * slot::INDEX_OFFSET) as u8);
+            }
+        }
+        None
+    }
+
+    /// Removes the first (least) byte in `self` and returns it, or `None` if
+    /// `self` is empty.
+    pub fn pop_first(&mut self) -> Option<u8> {
+        for (i, slot) in self.0.iter_mut().enumerate() {
+            if let Some(lsb) = slot::pop_lsb(slot) {
+                return Some(lsb + (i * slot::INDEX_OFFSET) as u8);
+            }
+        }
+        None
+    }
+
+    /// Returns the last (greatest) byte in `self`, or `None` if `self` is
+    /// empty.
+    pub fn last(&self) -> Option<u8> {
+        for (i, &slot) in self.0.iter().rev().enumerate() {
+            if let Some(msb) = slot::msb(slot) {
+                let i = LAST_SLOT_INDEX - i;
+                return Some(msb + (i * slot::INDEX_OFFSET) as u8);
+            }
+        }
+        None
+    }
+
+    /// Removes the last (least) byte in `self` and returns it, or `None` if
+    /// `self` is empty.
+    pub fn pop_last(&mut self) -> Option<u8> {
+        for (i, slot) in self.0.iter_mut().rev().enumerate() {
+            if let Some(msb) = slot::pop_msb(slot) {
+                let i = LAST_SLOT_INDEX - i;
+                return Some(msb + (i * slot::INDEX_OFFSET) as u8);
+            }
+        }
+        None
     }
 
     /// Inserts `byte` into `self` in-place.

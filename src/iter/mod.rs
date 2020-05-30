@@ -1,10 +1,8 @@
-use super::{ByteSet, NUM_SLOTS};
-use core::{iter, mem};
+use crate::{slot, ByteSet, LAST_SLOT_INDEX, NUM_SLOTS};
+use core::iter;
 
 #[cfg(test)]
 mod tests;
-
-const LAST_SLOT_INDEX: usize = NUM_SLOTS - 1;
 
 /// An iterator over a [`ByteSet`].
 ///
@@ -20,38 +18,6 @@ pub struct Iter {
 
     /// The current slot index when iterating backwards.
     backward_index: usize,
-}
-
-// Multiplied to get the byte offset for a given slot index.
-const INDEX_OFFSET: usize = mem::size_of::<usize>() * 8;
-
-/// Removes the least significant bit from `slot` and returns it, or `None` if
-/// `slot` is 0.
-#[inline]
-fn pop_lsb(slot: &mut usize) -> Option<u8> {
-    if *slot == 0 {
-        return None;
-    }
-
-    let lsb = slot.trailing_zeros() as u8;
-    *slot ^= 1 << lsb;
-
-    Some(lsb)
-}
-
-/// Removes the most significant bit from `slot` and returns it, or `None` if
-/// `slot` is 0.
-#[inline]
-fn pop_msb(slot: &mut usize) -> Option<u8> {
-    if *slot == 0 {
-        return None;
-    }
-
-    let bits = mem::size_of::<usize>() * 8 - 1;
-    let msb = bits ^ slot.leading_zeros() as usize;
-    *slot ^= 1 << msb;
-
-    Some(msb as u8)
 }
 
 impl Iter {
@@ -91,8 +57,8 @@ impl Iterator for Iter {
 
             let slot = &mut self.byte_set.0[index];
 
-            if let Some(lsb) = pop_lsb(slot) {
-                return Some(lsb + (index * INDEX_OFFSET) as u8);
+            if let Some(lsb) = slot::pop_lsb(slot) {
+                return Some(lsb + (index * slot::INDEX_OFFSET) as u8);
             }
         }
 
@@ -137,8 +103,8 @@ impl DoubleEndedIterator for Iter {
             // SAFETY: This invariant is tested.
             let slot = unsafe { self.byte_set.0.get_unchecked_mut(index) };
 
-            if let Some(msb) = pop_msb(slot) {
-                return Some(msb + (index * INDEX_OFFSET) as u8);
+            if let Some(msb) = slot::pop_msb(slot) {
+                return Some(msb + (index * slot::INDEX_OFFSET) as u8);
             }
         }
 
