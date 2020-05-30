@@ -61,6 +61,34 @@ const fn slot_index_and_shift(byte: u8) -> (usize, usize) {
     (index, shift)
 }
 
+#[cfg(test)]
+impl ByteSet {
+    /// Returns a formatting proxy for the binary representation of `self`.
+    ///
+    /// `fmt::Binary` is not currently implemented for `ByteSet` because of the
+    /// extra work to support formatting options.
+    pub(crate) fn fmt_binary<'a>(&'a self) -> impl core::fmt::Display + 'a {
+        use core::fmt::{self, Display, Formatter};
+
+        struct Formatted<'a>(&'a ByteSet);
+
+        impl Display for Formatted<'_> {
+            fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+                for slot in self.0.as_slots() {
+                    #[cfg(target_pointer_width = "64")]
+                    write!(f, "{:064b}", slot)?;
+
+                    #[cfg(target_pointer_width = "32")]
+                    write!(f, "{:032b}", slot)?;
+                }
+                Ok(())
+            }
+        }
+
+        Formatted(self)
+    }
+}
+
 impl ByteSet {
     /// Returns a set containing no bytes.
     #[inline]

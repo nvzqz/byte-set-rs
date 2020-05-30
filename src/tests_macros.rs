@@ -2,7 +2,12 @@
 
 macro_rules! assert_not_contains {
     ($set:expr, $byte:expr) => {
-        assert!(!$set.contains($byte), "{:?} contains {}", $set.0, $byte);
+        assert!(
+            !$set.contains($byte),
+            "{} contains {}",
+            $set.fmt_binary(),
+            $byte
+        );
     };
 }
 
@@ -10,8 +15,8 @@ macro_rules! assert_contains {
     ($set:expr, $byte:expr) => {
         assert!(
             $set.contains($byte),
-            "{:?} does not contain {}",
-            $set.0,
+            "{} does not contain {}",
+            $set.fmt_binary(),
             $byte
         );
     };
@@ -22,8 +27,8 @@ macro_rules! assert_len {
         assert_eq!(
             $set.len(),
             $len,
-            "{:?} does not have {} bytes",
-            $set.0,
+            "{} does not have {} bytes",
+            $set.fmt_binary(),
             $len
         );
     };
@@ -31,6 +36,6 @@ macro_rules! assert_len {
 
 macro_rules! assert_empty {
     ($set:expr) => {
-        assert!($set.is_empty(), "{:?} is not empty", $set.0);
+        assert!($set.is_empty(), "{} is not empty", $set.fmt_binary());
     };
 }
