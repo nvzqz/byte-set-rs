@@ -1,0 +1,99 @@
+use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
+use rand::Rng;
+use std::collections::{BTreeSet, HashSet};
+
+use crate::{rand::Rand, util};
+use byte_set::ByteSet;
+
+pub fn benches() {
+    let mut criterion = Criterion::default().configure_from_args();
+    let mut group = criterion.benchmark_group("Contains (Cached)");
+
+    let mut rng = rand::thread_rng();
+
+    let mut input = [0u8; 256];
+    for i in 0..=u8::max_value() {
+        input[i as usize] = i;
+    }
+
+    for &size in util::SIZES {
+        group.throughput(Throughput::Bytes(size as u64));
+
+        let byte_set = ByteSet::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("ByteSet", size),
+            &byte_set,
+            |b, byte_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(byte_set.contains(byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
+        let range_inclusive = black_box(0u8..=util::saturating_cast(size));
+        group.bench_with_input(
+            BenchmarkId::new("RangeInclusive<u8>", size),
+            &range_inclusive,
+            |b, range_inclusive| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(range_inclusive.contains(&byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
+        let hash_set = HashSet::<u8>::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("HashSet<u8>", size),
+            &hash_set,
+            |b, hash_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(hash_set.contains(&byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
+        let btree_set = BTreeSet::<u8>::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("BTreeSet<u8>", size),
+            &btree_set,
+            |b, btree_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(btree_set.contains(&byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
+        let vec = Vec::<u8>::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("Vec<u8>", size),
+            &vec,
+            |b, vec| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(vec.contains(&byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+    }
+
+    group.finish();
+}
