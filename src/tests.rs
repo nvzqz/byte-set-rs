@@ -19,10 +19,28 @@ macro_rules! assert_contains {
     };
 }
 
+macro_rules! assert_len {
+    ($set:expr, $len:expr) => {
+        assert_eq!(
+            $set.len(),
+            $len,
+            "{:?} does not have {} bytes",
+            $set.0,
+            $len
+        );
+    };
+}
+
 macro_rules! assert_empty {
     ($set:expr) => {
         assert!($set.is_empty(), "{:?} is not empty", $set.0);
     };
+}
+
+#[test]
+fn len() {
+    assert_len!(ByteSet::new(), 0);
+    assert_len!(ByteSet::full(), 256);
 }
 
 #[test]
