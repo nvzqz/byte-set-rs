@@ -350,6 +350,8 @@ impl ByteSet {
     /// This is equivalent to checking for `255 - b` in all subsequent searches
     /// of `b`.
     #[must_use]
+    // The `rbit` instruction makes this reasonable to inline.
+    #[cfg_attr(target_arch = "aarch64", inline)]
     // Not inlined because lots of code is generated on x86.
     pub const fn reverse_bits(self) -> Self {
         Self([
