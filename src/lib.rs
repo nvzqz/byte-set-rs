@@ -9,6 +9,10 @@ use core::{cmp, hash, iter::FromIterator, mem, ops, slice};
 mod macros;
 
 #[cfg(test)]
+#[macro_use]
+mod tests_macros;
+
+#[cfg(test)]
 mod tests;
 
 mod iter;
