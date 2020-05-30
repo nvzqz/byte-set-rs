@@ -528,7 +528,11 @@ impl<'a> Extend<&'a u8> for ByteSet {
 impl FromIterator<u8> for ByteSet {
     #[inline]
     fn from_iter<T: IntoIterator<Item = u8>>(iter: T) -> Self {
-        iter.into_iter().fold(Self::new(), Self::inserting)
+        // Make sure to use `insert` over `inserting` to not copy so many bytes
+        // on each iteration.
+        let mut set = ByteSet::new();
+        set.extend(iter);
+        set
     }
 }
 
