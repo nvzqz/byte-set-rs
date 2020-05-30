@@ -1,0 +1,8 @@
+[package]
+name = "byte_set"
+version = "0.1.0"
+edition = "2018"
+authors = ["Nikolai Vazquez"]
+description = "Efficient sets of bytes."
+keywords = ["byte", "set", "search", "string"]
+categories = ["no-std", "data-structures", "rust-patterns", "embedded"]
