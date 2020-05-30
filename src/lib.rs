@@ -512,21 +512,18 @@ impl From<u8> for ByteSet {
 }
 
 impl Extend<u8> for ByteSet {
-    #[inline]
     fn extend<T: IntoIterator<Item = u8>>(&mut self, iter: T) {
         iter.into_iter().for_each(|byte| self.insert(byte));
     }
 }
 
 impl<'a> Extend<&'a u8> for ByteSet {
-    #[inline]
     fn extend<T: IntoIterator<Item = &'a u8>>(&mut self, iter: T) {
         self.extend(iter.into_iter().cloned());
     }
 }
 
 impl FromIterator<u8> for ByteSet {
-    #[inline]
     fn from_iter<T: IntoIterator<Item = u8>>(iter: T) -> Self {
         // Make sure to use `insert` over `inserting` to not copy so many bytes
         // on each iteration.
@@ -537,7 +534,6 @@ impl FromIterator<u8> for ByteSet {
 }
 
 impl<'a> FromIterator<&'a u8> for ByteSet {
-    #[inline]
     fn from_iter<T: IntoIterator<Item = &'a u8>>(iter: T) -> Self {
         iter.into_iter().cloned().collect()
     }
