@@ -11,6 +11,9 @@ mod macros;
 #[cfg(test)]
 mod tests;
 
+mod iter;
+pub use iter::Iter;
+
 const SLOT_SIZE: usize = mem::size_of::<usize>();
 
 const NUM_SLOTS: usize = 256 / 8 / SLOT_SIZE;
@@ -466,6 +469,16 @@ impl<'a> FromIterator<&'a u8> for ByteSet {
     #[inline]
     fn from_iter<T: IntoIterator<Item = &'a u8>>(iter: T) -> Self {
         iter.into_iter().cloned().collect()
+    }
+}
+
+impl IntoIterator for ByteSet {
+    type Item = u8;
+    type IntoIter = Iter;
+
+    #[inline]
+    fn into_iter(self) -> Self::IntoIter {
+        self.into()
     }
 }
 
