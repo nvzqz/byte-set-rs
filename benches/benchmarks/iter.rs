@@ -1,5 +1,5 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
-use std::collections::{BTreeSet, BinaryHeap, HashSet};
+use std::collections::{BTreeSet, HashSet};
 
 use crate::{rand::Rand, util};
 use byte_set::ByteSet;
@@ -66,18 +66,6 @@ pub fn benches(criterion: &mut Criterion) {
                 || black_box(Vec::<u8>::rand_len(size, &mut rng)),
                 |byte_set| {
                     for &byte in byte_set.iter() {
-                        black_box(byte);
-                    }
-                },
-                BatchSize::SmallInput,
-            )
-        });
-
-        group.bench_function(BenchmarkId::new("BinaryHeap<u8>", size), |b| {
-            b.iter_batched_ref(
-                || black_box(BinaryHeap::<u8>::rand_len(size, &mut rng)),
-                |binary_heap| {
-                    for &byte in binary_heap.iter() {
                         black_box(byte);
                     }
                 },
