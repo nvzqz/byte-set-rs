@@ -9,6 +9,7 @@ categories = ["no-std", "data-structures", "rust-patterns", "embedded"]
 
 [package.metadata.docs.rs]
 all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 rand = { version = "0.7", default-features = false, optional = true }
