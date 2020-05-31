@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2018"
 authors = ["Nikolai Vazquez"]
 license = "MIT OR Apache-2.0"
+readme = "README.md"
 description = "Efficient sets of bytes."
 keywords = ["byte", "set", "search", "string"]
 categories = ["no-std", "data-structures", "rust-patterns", "embedded"]
