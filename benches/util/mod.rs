@@ -1,5 +1,8 @@
 use std::convert::TryFrom;
 
+pub mod bool256;
+pub use bool256::Bool256;
+
 pub mod rand;
 pub use self::rand::Rand;
 

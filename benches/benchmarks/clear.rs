@@ -1,7 +1,7 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
 use std::collections::{BTreeSet, HashSet};
 
-use crate::util::{self, Rand};
+use crate::util::{self, Bool256, Rand};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {
@@ -18,6 +18,17 @@ pub fn benches(criterion: &mut Criterion) {
                 |byte_set| {
                     byte_set.clear();
                     black_box(byte_set);
+                },
+                BatchSize::SmallInput,
+            )
+        });
+
+        group.bench_function(BenchmarkId::new("[bool; 256]", size), |b| {
+            b.iter_batched_ref(
+                || black_box(Bool256::rand_len(size, &mut rng)),
+                |bool256| {
+                    bool256.clear();
+                    black_box(bool256);
                 },
                 BatchSize::SmallInput,
             )

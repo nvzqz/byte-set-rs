@@ -2,7 +2,7 @@ use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
 use rand::Rng;
 use std::collections::{BTreeSet, HashSet};
 
-use crate::util::{self, Rand};
+use crate::util::{self, Bool256, Rand};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {
@@ -27,6 +27,21 @@ pub fn benches(criterion: &mut Criterion) {
                     || rng.gen::<u8>(),
                     |byte| {
                         black_box(byte_set.contains(byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
+        let bool256 = Bool256::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("[bool; 256]", size),
+            &bool256,
+            |b, bool256| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(bool256.contains(byte));
                     },
                     BatchSize::SmallInput,
                 )
