@@ -1,7 +1,11 @@
+pub mod clear;
 pub mod contains_cached;
 pub mod contains_random;
+pub mod drop;
 pub mod extend_slice;
 pub mod insert;
 pub mod iter;
+pub mod len;
 pub mod max;
 pub mod min;
+pub mod remove_single;

@@ -12,13 +12,17 @@ fn main() {
     }
 
     benchmarks! {
+        clear,
         contains_cached,
         contains_random,
+        drop,
         extend_slice,
         insert,
         iter,
+        len,
         max,
         min,
+        remove_single,
     }
 
     criterion.final_summary();
