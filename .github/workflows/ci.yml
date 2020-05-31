@@ -47,6 +47,12 @@ jobs:
         with:
           command: check
 
+      # Run
+      - name: cargo check benches
+        uses: actions-rs/cargo@v1
+        with:
+          command: cargo check --bench benches
+
   rust-test:
     name: Test
     runs-on: ubuntu-latest
