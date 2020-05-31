@@ -76,6 +76,27 @@ pub fn benches(criterion: &mut Criterion) {
             )
         });
 
+        group.bench_function(
+            BenchmarkId::new("Vec<u8> (Binary Search)", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let bytes = crate::rand::shuffled_bytes(&mut rng);
+                        black_box((bytes, Vec::<u8>::new()))
+                    },
+                    |(bytes, vec)| {
+                        for byte in &bytes[..size] {
+                            if let Err(index) = vec.binary_search(byte) {
+                                vec.insert(index, *byte);
+                            }
+                        }
+                        black_box(vec);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("BinaryHeap<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
