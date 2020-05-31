@@ -52,8 +52,8 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || black_box(BTreeSet::<u8>::rand_len(size, &mut rng)),
-                |byte_set| {
-                    for &byte in byte_set.iter() {
+                |btree_set| {
+                    for &byte in btree_set.iter() {
                         black_box(byte);
                     }
                 },
@@ -64,8 +64,8 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("Vec<u8>", size), |b| {
             b.iter_batched_ref(
                 || black_box(Vec::<u8>::rand_len(size, &mut rng)),
-                |byte_set| {
-                    for &byte in byte_set.iter() {
+                |vec| {
+                    for &byte in vec.iter() {
                         black_box(byte);
                     }
                 },
