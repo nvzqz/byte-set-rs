@@ -21,11 +21,12 @@ mod tests_macros;
 mod tests;
 
 pub(crate) mod slot;
+pub(crate) use slot::Slot;
 
 mod iter;
 pub use iter::Iter;
 
-const SLOT_SIZE: usize = mem::size_of::<usize>();
+const SLOT_SIZE: usize = mem::size_of::<Slot>();
 
 const NUM_SLOTS: usize = 256 / 8 / SLOT_SIZE;
 
@@ -40,17 +41,15 @@ const LAST_SLOT_INDEX: usize = NUM_SLOTS - 1;
 /// byte in the set. Likewise, the last last (most significant) bit represents
 /// the last byte.
 ///
-/// The mask is composed a of [`usize`] "slot" array, and as a result this type
-/// has the same alignment as [`usize`]. This will *never* change. The type is
-/// even marked as [`#[repr(transparent)]`][transparent], so its ABI is the same
-/// as that of `[usize; 4]`/`[usize; 8]` on 64/32-bit platforms respectively.
+/// The mask is composed a of "slot" array. Each slot is either 64 or 32 bits
+/// wide, depending on the target architecture. As of right now, this is based
+/// on native register size. This may change in the future based on target
+/// features that enable better performance.
 ///
 /// [`u8`]: https://doc.rust-lang.org/std/primitive.u8.html
-/// [`usize`]: https://doc.rust-lang.org/std/primitive.usize.html
-/// [transparent]: https://github.com/rust-lang/rfcs/blob/master/text/1758-repr-transparent.md
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
-pub struct ByteSet([usize; NUM_SLOTS]);
+pub struct ByteSet([Slot; NUM_SLOTS]);
 
 /// Returns the slot index for `byte` and the bit shift for that slot.
 #[inline]
@@ -108,7 +107,7 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn full() -> Self {
-        Self([usize::max_value(); NUM_SLOTS])
+        Self([Slot::max_value(); NUM_SLOTS])
     }
 
     /// Returns a set containing uniformly-distributed random bytes from `rng`.
@@ -366,7 +365,7 @@ impl ByteSet {
         let (index, shift) = slot_index_and_shift(byte);
         let slot = self.0[index];
 
-        self.0[index] = (slot & !(1 << shift)) | ((enabled as usize) << shift);
+        self.0[index] = (slot & !(1 << shift)) | ((enabled as Slot) << shift);
     }
 
     /// Returns a copy of `self` with `byte` set to `enabled`.
@@ -376,7 +375,7 @@ impl ByteSet {
         let (index, shift) = slot_index_and_shift(byte);
         let slot = self.0[index];
 
-        self.0[index] = (slot & !(1 << shift)) | ((enabled as usize) << shift);
+        self.0[index] = (slot & !(1 << shift)) | ((enabled as Slot) << shift);
         self
     }
 
@@ -391,7 +390,7 @@ impl ByteSet {
 
     #[inline]
     #[must_use]
-    const fn slot_and_or(&self, other: &Self) -> usize {
+    const fn slot_and_or(&self, other: &Self) -> Slot {
         map_reduce_slots!(self, other, &, |)
     }
 
