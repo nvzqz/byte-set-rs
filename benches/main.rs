@@ -17,6 +17,8 @@ fn main() {
         extend_slice,
         insert,
         iter,
+        max,
+        min,
     }
 
     criterion.final_summary();
