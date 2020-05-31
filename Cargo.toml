@@ -6,6 +6,7 @@ authors = ["Nikolai Vazquez"]
 description = "Efficient sets of bytes."
 keywords = ["byte", "set", "search", "string"]
 categories = ["no-std", "data-structures", "rust-patterns", "embedded"]
+build = "build.rs"
 
 [package.metadata.docs.rs]
 all-features = true

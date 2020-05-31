@@ -2,11 +2,10 @@
 
 use core::mem;
 
-#[cfg(target_pointer_width = "32")]
+#[cfg(not(byte_set_slot_64))]
 pub type Slot = u32;
 
-// TODO: Use 64-bit slot on 32-bit targets with appropriate 64-bit instructions.
-#[cfg(target_pointer_width = "64")]
+#[cfg(byte_set_slot_64)]
 pub type Slot = u64;
 
 const SLOT_NUM_BITS: usize = mem::size_of::<Slot>() * 8;

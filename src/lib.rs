@@ -56,14 +56,14 @@ pub struct ByteSet([Slot; NUM_SLOTS]);
 const fn slot_index_and_shift(byte: u8) -> (usize, usize) {
     let byte = byte as usize;
 
-    #[cfg(target_pointer_width = "64")]
+    #[cfg(byte_set_slot_64)]
     let index = byte >> 6;
-    #[cfg(target_pointer_width = "64")]
+    #[cfg(byte_set_slot_64)]
     let shift = byte & 0b0011_1111;
 
-    #[cfg(target_pointer_width = "32")]
+    #[cfg(not(byte_set_slot_64))]
     let index = byte >> 5;
-    #[cfg(target_pointer_width = "32")]
+    #[cfg(not(byte_set_slot_64))]
     let shift = byte & 0b0001_1111;
 
     (index, shift)
@@ -81,10 +81,10 @@ impl ByteSet {
         impl fmt::Display for Formatted<'_> {
             fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
                 for slot in &(self.0).0 {
-                    #[cfg(target_pointer_width = "64")]
+                    #[cfg(byte_set_slot_64)]
                     write!(f, "{:064b}", slot)?;
 
-                    #[cfg(target_pointer_width = "32")]
+                    #[cfg(not(byte_set_slot_64))]
                     write!(f, "{:032b}", slot)?;
                 }
                 Ok(())
@@ -185,7 +185,7 @@ impl ByteSet {
             & (self.0[2] == 0)
             & (self.0[3] == 0);
 
-        #[cfg(target_pointer_width = "32")]
+        #[cfg(not(byte_set_slot_64))]
         {
             is_empty
                 & (self.0[4] == 0)
@@ -194,7 +194,7 @@ impl ByteSet {
                 & (self.0[7] == 0)
         }
 
-        #[cfg(target_pointer_width = "64")]
+        #[cfg(byte_set_slot_64)]
         is_empty
     }
 
@@ -207,7 +207,7 @@ impl ByteSet {
             + (self.0[2].count_ones() as usize)
             + (self.0[3].count_ones() as usize);
 
-        #[cfg(target_pointer_width = "32")]
+        #[cfg(not(byte_set_slot_64))]
         {
             len + (self.0[4].count_ones() as usize)
                 + (self.0[5].count_ones() as usize)
@@ -215,7 +215,7 @@ impl ByteSet {
                 + (self.0[7].count_ones() as usize)
         }
 
-        #[cfg(target_pointer_width = "64")]
+        #[cfg(byte_set_slot_64)]
         len
     }
 
@@ -293,7 +293,7 @@ impl ByteSet {
         self.0[2] |= other.0[2];
         self.0[3] |= other.0[3];
 
-        #[cfg(target_pointer_width = "32")]
+        #[cfg(not(byte_set_slot_64))]
         {
             self.0[4] |= other.0[4];
             self.0[5] |= other.0[5];
@@ -498,13 +498,13 @@ impl ByteSet {
     // Not inlined because lots of code is generated on x86.
     pub const fn reverse_bits(self) -> Self {
         Self([
-            #[cfg(target_pointer_width = "32")]
+            #[cfg(not(byte_set_slot_64))]
             self.0[7].reverse_bits(),
-            #[cfg(target_pointer_width = "32")]
+            #[cfg(not(byte_set_slot_64))]
             self.0[6].reverse_bits(),
-            #[cfg(target_pointer_width = "32")]
+            #[cfg(not(byte_set_slot_64))]
             self.0[5].reverse_bits(),
-            #[cfg(target_pointer_width = "32")]
+            #[cfg(not(byte_set_slot_64))]
             self.0[4].reverse_bits(),
             self.0[3].reverse_bits(),
             self.0[2].reverse_bits(),
@@ -524,7 +524,7 @@ impl ByteSet {
             & (self.0[2] == other.0[2])
             & (self.0[3] == other.0[3]);
 
-        #[cfg(target_pointer_width = "32")]
+        #[cfg(not(byte_set_slot_64))]
         {
             eq & (self.0[4] == other.0[4])
                 & (self.0[5] == other.0[5])
@@ -532,7 +532,7 @@ impl ByteSet {
                 & (self.0[7] == other.0[7])
         }
 
-        #[cfg(target_pointer_width = "64")]
+        #[cfg(byte_set_slot_64)]
         eq
     }
 
