@@ -7,6 +7,9 @@ description = "Efficient sets of bytes."
 keywords = ["byte", "set", "search", "string"]
 categories = ["no-std", "data-structures", "rust-patterns", "embedded"]
 
+[package.metadata.docs.rs]
+all-features = true
+
 [dependencies]
 rand = { version = "0.7", default-features = false, optional = true }
 rand_core = { version = "0.5", default-features = false, optional = true }
