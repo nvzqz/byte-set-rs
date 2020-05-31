@@ -180,6 +180,8 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn is_empty(&self) -> bool {
+        #![allow(clippy::let_and_return)]
+
         let is_empty = (self.0[0] == 0)
             & (self.0[1] == 0)
             & (self.0[2] == 0)
@@ -202,6 +204,8 @@ impl ByteSet {
     #[cfg_attr(target_feature = "popcnt", inline)]
     #[must_use]
     pub const fn len(&self) -> usize {
+        #![allow(clippy::let_and_return)]
+
         let len = (self.0[0].count_ones() as usize)
             + (self.0[1].count_ones() as usize)
             + (self.0[2].count_ones() as usize)
@@ -519,6 +523,8 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn eq(&self, other: &Self) -> bool {
+        #![allow(clippy::let_and_return)]
+
         let eq = (self.0[0] == other.0[0])
             & (self.0[1] == other.0[1])
             & (self.0[2] == other.0[2])
