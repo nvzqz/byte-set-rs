@@ -51,7 +51,7 @@ jobs:
       - name: cargo check benches
         uses: actions-rs/cargo@v1
         with:
-          command: check --bench benches
+          command: check
           args: --bench benches
 
   rust-test:
