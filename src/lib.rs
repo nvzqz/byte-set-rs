@@ -3,7 +3,7 @@
 #![cfg_attr(not(test), no_std)]
 #![warn(missing_docs)]
 
-use core::{cmp, hash, iter::FromIterator, mem, ops, slice};
+use core::{cmp, fmt, hash, iter::FromIterator, mem, ops, slice};
 
 // Makes `ByteSet::{rand,try_rand}` simpler to express.
 #[cfg(any(test, feature = "rand"))]
@@ -604,6 +604,12 @@ impl IntoIterator for ByteSet {
     #[inline]
     fn into_iter(self) -> Self::IntoIter {
         self.into()
+    }
+}
+
+impl fmt::Debug for ByteSet {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.debug_set().entries(*self).finish()
     }
 }
 

@@ -7,7 +7,7 @@ mod tests;
 /// An iterator over a [`ByteSet`].
 ///
 /// [`ByteSet`]: struct.ByteSet.html
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Iter {
     /// The set being iterated over. It is mutated in-place as bits are popped
     /// from each slot.
