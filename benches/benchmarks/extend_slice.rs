@@ -1,7 +1,7 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
 use std::collections::{BTreeSet, BinaryHeap, HashSet};
 
-use crate::util;
+use crate::util::{self, rand::shuffled_bytes};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {
@@ -15,7 +15,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("ByteSet", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     black_box((bytes, ByteSet::new()))
                 },
                 |(bytes, byte_set)| {
@@ -29,7 +29,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("HashSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     black_box((bytes, HashSet::<u8>::new()))
                 },
                 |(bytes, hash_set)| {
@@ -43,7 +43,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     black_box((bytes, BTreeSet::<u8>::new()))
                 },
                 |(bytes, btree_set)| {
@@ -57,7 +57,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("Vec<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     black_box((bytes, Vec::<u8>::new()))
                 },
                 |(bytes, vec)| {
@@ -71,7 +71,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("BinaryHeap<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     black_box((bytes, BinaryHeap::<u8>::new()))
                 },
                 |(bytes, binary_heap)| {

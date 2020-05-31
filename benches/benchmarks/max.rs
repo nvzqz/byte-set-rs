@@ -1,7 +1,7 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
 use std::collections::{BTreeSet, BinaryHeap, HashSet};
 
-use crate::{rand::Rand, util};
+use crate::util::{self, Rand};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {

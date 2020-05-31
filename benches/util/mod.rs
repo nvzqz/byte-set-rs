@@ -1,5 +1,8 @@
 use std::convert::TryFrom;
 
+pub mod rand;
+pub use self::rand::Rand;
+
 /// Input sizes for benchmarks.
 pub const SIZES: &[usize] = &[0, 8, 16, 32, 64, 128, 192, 256];
 

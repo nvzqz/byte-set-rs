@@ -2,7 +2,7 @@ use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
 use rand::{seq::SliceRandom, Rng};
 use std::collections::{BTreeSet, HashSet};
 
-use crate::util;
+use crate::util::{self, rand::shuffled_bytes};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {
@@ -16,7 +16,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("ByteSet", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     let bytes = &bytes[..size];
 
                     if let Some(&byte) = bytes.choose(&mut rng) {
@@ -36,7 +36,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("HashSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     let bytes = &bytes[..size];
 
                     if let Some(&byte) = bytes.choose(&mut rng) {
@@ -56,7 +56,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     let bytes = &bytes[..size];
 
                     if let Some(&byte) = bytes.choose(&mut rng) {
@@ -76,7 +76,7 @@ pub fn benches(criterion: &mut Criterion) {
         group.bench_function(BenchmarkId::new("Vec<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
-                    let bytes = crate::rand::shuffled_bytes(&mut rng);
+                    let bytes = shuffled_bytes(&mut rng);
                     let bytes = &bytes[..size];
 
                     if let Some(&byte) = bytes.choose(&mut rng) {
@@ -98,7 +98,7 @@ pub fn benches(criterion: &mut Criterion) {
             |b| {
                 b.iter_batched_ref(
                     || {
-                        let bytes = crate::rand::shuffled_bytes(&mut rng);
+                        let bytes = shuffled_bytes(&mut rng);
                         let bytes = &bytes[..size];
 
                         if let Some(&byte) = bytes.choose(&mut rng) {

@@ -1,5 +1,4 @@
 mod benchmarks;
-mod rand;
 mod util;
 
 fn main() {
