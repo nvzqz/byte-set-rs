@@ -688,6 +688,7 @@ impl Ord for ByteSet {
     }
 }
 
+#[allow(clippy::derive_hash_xor_eq)]
 impl hash::Hash for ByteSet {
     #[inline]
     fn hash<H: hash::Hasher>(&self, state: &mut H) {
