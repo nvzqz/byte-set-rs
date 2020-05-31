@@ -486,6 +486,7 @@ impl ByteSet {
     /// [`Not`]: https://doc.rust-lang.org/std/ops/trait.Not.html
     #[inline]
     #[must_use]
+    #[allow(clippy::should_implement_trait)]
     pub const fn not(self) -> Self {
         map_slots!(self, !)
     }
@@ -520,6 +521,7 @@ impl ByteSet {
     /// This exists because `PartialEq` is currently unstable in `const`.
     #[inline]
     #[must_use]
+    #[allow(clippy::should_implement_trait)]
     #[allow(clippy::let_and_return)]
     pub const fn eq(&self, other: &Self) -> bool {
         let eq = (self.0[0] == other.0[0])
@@ -544,6 +546,7 @@ impl ByteSet {
     /// This exists because `PartialEq` is currently unstable in `const`.
     #[inline]
     #[must_use]
+    #[allow(clippy::should_implement_trait)]
     pub const fn ne(&self, other: &Self) -> bool {
         !self.eq(other)
     }
