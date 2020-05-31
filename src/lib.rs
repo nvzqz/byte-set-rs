@@ -142,6 +142,39 @@ impl ByteSet {
         Ok(set)
     }
 
+    /// The set of all ASCII alphabetic characters:
+    ///
+    /// - U+0041 'A' ..= U+005A 'Z'
+    /// - U+0061 'a' ..= U+007A 'z'
+    pub const ASCII_ALPHABETIC: Self =
+        Self::ASCII_LOWERCASE.inserting_all(Self::ASCII_UPPERCASE);
+
+    /// The set of all ASCII uppercase characters: U+0041 'A' ..= U+005A 'Z'.
+    pub const ASCII_UPPERCASE: Self = byte_set![
+        b'A', b'B', b'C', b'D', b'E', b'F', b'G', b'H', b'I', b'J', b'K', b'L',
+        b'M', b'N', b'O', b'P', b'Q', b'R', b'S', b'T', b'U', b'V', b'W', b'X',
+        b'Y', b'Z',
+    ];
+
+    /// The set of all ASCII lowercase characters: U+0061 'a' ..= U+007A 'z'.
+    pub const ASCII_LOWERCASE: Self = byte_set![
+        b'a', b'b', b'c', b'd', b'e', b'f', b'g', b'h', b'i', b'j', b'k', b'l',
+        b'm', b'n', b'o', b'p', b'q', b'r', b's', b't', b'u', b'v', b'w', b'x',
+        b'y', b'z',
+    ];
+
+    /// The set of all ASCII alphanumeric characters:
+    ///
+    /// - U+0041 'A' ..= U+005A 'Z'
+    /// - U+0061 'a' ..= U+007A 'z'
+    /// - U+0030 '0' ..= U+0039 '9'
+    pub const ASCII_ALPHANUMERIC: Self =
+        Self::ASCII_ALPHABETIC.inserting_all(Self::ASCII_DIGIT);
+
+    /// The set of all ASCII decimal digits: U+0030 '0' ..= U+0039 '9'.
+    pub const ASCII_DIGIT: Self =
+        byte_set![b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9'];
+
     /// Returns `true` if `self` contains no bytes.
     ///
     /// This is more efficient than checking `self.len() == 0`.
