@@ -75,13 +75,11 @@ impl ByteSet {
     ///
     /// `fmt::Binary` is not currently implemented for `ByteSet` because of the
     /// extra work to support formatting options.
-    pub(crate) fn fmt_binary<'a>(&'a self) -> impl core::fmt::Display + 'a {
-        use core::fmt::{self, Display, Formatter};
-
+    pub(crate) fn fmt_binary<'a>(&'a self) -> impl fmt::Display + 'a {
         struct Formatted<'a>(&'a ByteSet);
 
-        impl Display for Formatted<'_> {
-            fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        impl fmt::Display for Formatted<'_> {
+            fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
                 for slot in &(self.0).0 {
                     #[cfg(target_pointer_width = "64")]
                     write!(f, "{:064b}", slot)?;
