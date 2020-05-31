@@ -1,5 +1,5 @@
 use super::rand::{shuffled_bytes, Rand};
-use std::{iter, slice};
+use std::{iter, ops::Range};
 
 /// A wrapper around `[bool; 256]` for comparing performance.
 pub struct Bool256(pub [bool; 256]);
@@ -84,19 +84,26 @@ impl<'a> IntoIterator for &'a Bool256 {
     type Item = u8;
 
     fn into_iter(self) -> Self::IntoIter {
-        Iter(self.0.iter().enumerate())
+        Iter {
+            bool256: self,
+            indexes: 0..256,
+        }
     }
 }
 
-pub struct Iter<'a>(iter::Enumerate<slice::Iter<'a, bool>>);
+pub struct Iter<'a> {
+    bool256: &'a Bool256,
+    indexes: Range<usize>,
+}
 
 impl Iterator for Iter<'_> {
     type Item = u8;
 
     fn next(&mut self) -> Option<u8> {
-        for (i, &is_contained) in self.0.by_ref() {
-            if is_contained {
-                return Some(i as u8);
+        for i in self.indexes.by_ref() {
+            let byte = i as u8;
+            if self.bool256.contains(byte) {
+                return Some(byte);
             }
         }
         None
@@ -105,9 +112,10 @@ impl Iterator for Iter<'_> {
 
 impl DoubleEndedIterator for Iter<'_> {
     fn next_back(&mut self) -> Option<Self::Item> {
-        for (i, &is_contained) in self.0.by_ref().rev() {
-            if is_contained {
-                return Some(i as u8);
+        for i in self.indexes.by_ref().rev() {
+            let byte = i as u8;
+            if self.bool256.contains(byte) {
+                return Some(byte);
             }
         }
         None
