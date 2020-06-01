@@ -1,4 +1,5 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
+use hashbrown::HashSet as HashbrownSet;
 use rand::{seq::SliceRandom, Rng};
 use std::collections::{BTreeSet, HashSet};
 
@@ -63,6 +64,26 @@ pub fn benches(criterion: &mut Criterion) {
                         black_box((byte, bytes.iter().cloned().collect()))
                     } else {
                         black_box((rng.gen::<u8>(), HashSet::<u8>::new()))
+                    }
+                },
+                |(byte, hash_set)| {
+                    hash_set.remove(byte);
+                    black_box(hash_set);
+                },
+                BatchSize::SmallInput,
+            )
+        });
+
+        group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
+            b.iter_batched_ref(
+                || {
+                    let bytes = shuffled_bytes(&mut rng);
+                    let bytes = &bytes[..size];
+
+                    if let Some(&byte) = bytes.choose(&mut rng) {
+                        black_box((byte, bytes.iter().cloned().collect()))
+                    } else {
+                        black_box((rng.gen::<u8>(), HashbrownSet::<u8>::new()))
                     }
                 },
                 |(byte, hash_set)| {

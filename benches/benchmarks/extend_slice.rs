@@ -1,4 +1,5 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
+use hashbrown::HashSet as HashbrownSet;
 use std::collections::{BTreeSet, BinaryHeap, HashSet};
 
 use crate::util::{self, rand::shuffled_bytes, Bool256};
@@ -45,6 +46,20 @@ pub fn benches(criterion: &mut Criterion) {
                 || {
                     let bytes = shuffled_bytes(&mut rng);
                     black_box((bytes, HashSet::<u8>::new()))
+                },
+                |(bytes, hash_set)| {
+                    hash_set.extend(&bytes[..size]);
+                    black_box(hash_set);
+                },
+                BatchSize::SmallInput,
+            )
+        });
+
+        group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
+            b.iter_batched_ref(
+                || {
+                    let bytes = shuffled_bytes(&mut rng);
+                    black_box((bytes, HashbrownSet::<u8>::new()))
                 },
                 |(bytes, hash_set)| {
                     hash_set.extend(&bytes[..size]);

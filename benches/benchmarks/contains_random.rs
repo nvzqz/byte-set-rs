@@ -1,4 +1,5 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
+use hashbrown::HashSet as HashbrownSet;
 use rand::Rng;
 use std::collections::{BTreeSet, HashSet};
 
@@ -64,6 +65,21 @@ pub fn benches(criterion: &mut Criterion) {
                     black_box((
                         rng.gen::<u8>(),
                         HashSet::<u8>::rand_len(size, &mut rng),
+                    ))
+                },
+                |(byte, hash_set)| {
+                    black_box(hash_set.contains(byte));
+                },
+                BatchSize::SmallInput,
+            )
+        });
+
+        group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
+            b.iter_batched_ref(
+                || {
+                    black_box((
+                        rng.gen::<u8>(),
+                        HashbrownSet::<u8>::rand_len(size, &mut rng),
                     ))
                 },
                 |(byte, hash_set)| {
