@@ -224,6 +224,27 @@ impl ByteSet {
         is_full
     }
 
+    /// Returns `true` if `self` contains only ASCII characters, or is empty.
+    ///
+    /// This is more efficient than checking whether `self.last()` is ASCII or
+    /// `None`.
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii(&self) -> bool {
+        #[cfg(byte_set_slot_64)]
+        {
+            (self.0[2] == 0) & (self.0[3] == 0)
+        }
+
+        #[cfg(not(byte_set_slot_64))]
+        {
+            (self.0[4] == 0)
+                & (self.0[5] == 0)
+                & (self.0[6] == 0)
+                & (self.0[7] == 0)
+        }
+    }
+
     /// Returns the number of bytes contained in `self`.
     #[cfg_attr(target_feature = "popcnt", inline)]
     #[must_use]
