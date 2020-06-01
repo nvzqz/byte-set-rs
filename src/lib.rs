@@ -199,6 +199,31 @@ impl ByteSet {
         is_empty
     }
 
+    /// Returns `true` if `self` contains all bytes.
+    ///
+    /// This is more efficient than checking `self.len() == 256`.
+    #[inline]
+    #[must_use]
+    #[allow(clippy::let_and_return)]
+    pub const fn is_full(&self) -> bool {
+        let is_full = (self.0[0] == !0)
+            & (self.0[1] == !0)
+            & (self.0[2] == !0)
+            & (self.0[3] == !0);
+
+        #[cfg(not(byte_set_slot_64))]
+        {
+            is_full
+                & (self.0[4] == !0)
+                & (self.0[5] == !0)
+                & (self.0[6] == !0)
+                & (self.0[7] == !0)
+        }
+
+        #[cfg(byte_set_slot_64)]
+        is_full
+    }
+
     /// Returns the number of bytes contained in `self`.
     #[cfg_attr(target_feature = "popcnt", inline)]
     #[must_use]
