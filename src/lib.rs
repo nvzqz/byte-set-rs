@@ -20,13 +20,13 @@ mod tests_macros;
 #[cfg(test)]
 mod tests;
 
-pub(crate) mod slot;
-pub(crate) use slot::Slot;
+pub(crate) mod chunk;
+pub(crate) use chunk::Chunk;
 
 mod iter;
 pub use iter::Iter;
 
-const SLOT_SIZE: usize = mem::size_of::<Slot>();
+const SLOT_SIZE: usize = mem::size_of::<Chunk>();
 
 const NUM_SLOTS: usize = 256 / 8 / SLOT_SIZE;
 
@@ -41,7 +41,7 @@ const LAST_SLOT_INDEX: usize = NUM_SLOTS - 1;
 /// byte in the set. Likewise, the last last (most significant) bit represents
 /// the last byte.
 ///
-/// The mask is composed a of "slot" array. Each slot is either 64 or 32 bits
+/// The mask is composed a of "chunk" array. Each chunk is either 64 or 32 bits
 /// wide, depending on the target architecture. As of right now, this is based
 /// on native register size. This may change in the future based on target
 /// features that enable better performance.
@@ -49,21 +49,21 @@ const LAST_SLOT_INDEX: usize = NUM_SLOTS - 1;
 /// [`u8`]: https://doc.rust-lang.org/std/primitive.u8.html
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
-pub struct ByteSet([Slot; NUM_SLOTS]);
+pub struct ByteSet([Chunk; NUM_SLOTS]);
 
-/// Returns the slot index for `byte` and the bit shift for that slot.
+/// Returns the chunk index for `byte` and the bit shift for that chunk.
 #[inline]
-const fn slot_index_and_shift(byte: u8) -> (usize, usize) {
+const fn chunk_index_and_shift(byte: u8) -> (usize, usize) {
     let byte = byte as usize;
 
-    #[cfg(byte_set_slot_64)]
+    #[cfg(byte_set_chunk_64)]
     let index = byte >> 6;
-    #[cfg(byte_set_slot_64)]
+    #[cfg(byte_set_chunk_64)]
     let shift = byte & 0b0011_1111;
 
-    #[cfg(not(byte_set_slot_64))]
+    #[cfg(not(byte_set_chunk_64))]
     let index = byte >> 5;
-    #[cfg(not(byte_set_slot_64))]
+    #[cfg(not(byte_set_chunk_64))]
     let shift = byte & 0b0001_1111;
 
     (index, shift)
@@ -80,12 +80,12 @@ impl ByteSet {
 
         impl fmt::Display for Formatted<'_> {
             fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-                for slot in &(self.0).0 {
-                    #[cfg(byte_set_slot_64)]
-                    write!(f, "{:064b}", slot)?;
+                for chunk in &(self.0).0 {
+                    #[cfg(byte_set_chunk_64)]
+                    write!(f, "{:064b}", chunk)?;
 
-                    #[cfg(not(byte_set_slot_64))]
-                    write!(f, "{:032b}", slot)?;
+                    #[cfg(not(byte_set_chunk_64))]
+                    write!(f, "{:032b}", chunk)?;
                 }
                 Ok(())
             }
@@ -107,7 +107,7 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn full() -> Self {
-        Self([Slot::max_value(); NUM_SLOTS])
+        Self([Chunk::max_value(); NUM_SLOTS])
     }
 
     /// Returns a set containing uniformly-distributed random bytes from `rng`.
@@ -143,12 +143,12 @@ impl ByteSet {
 
     /// The set of all ASCII characters: U+0000 NUL ..= U+007F DEL.
     pub const ASCII: Self = {
-        #[cfg(byte_set_slot_64)]
+        #[cfg(byte_set_chunk_64)]
         {
             Self([!0, !0, 0, 0])
         }
 
-        #[cfg(not(byte_set_slot_64))]
+        #[cfg(not(byte_set_chunk_64))]
         {
             Self([!0, !0, !0, !0, 0, 0, 0, 0])
         }
@@ -199,7 +199,7 @@ impl ByteSet {
             & (self.0[2] == 0)
             & (self.0[3] == 0);
 
-        #[cfg(not(byte_set_slot_64))]
+        #[cfg(not(byte_set_chunk_64))]
         {
             is_empty
                 & (self.0[4] == 0)
@@ -208,7 +208,7 @@ impl ByteSet {
                 & (self.0[7] == 0)
         }
 
-        #[cfg(byte_set_slot_64)]
+        #[cfg(byte_set_chunk_64)]
         is_empty
     }
 
@@ -224,7 +224,7 @@ impl ByteSet {
             & (self.0[2] == !0)
             & (self.0[3] == !0);
 
-        #[cfg(not(byte_set_slot_64))]
+        #[cfg(not(byte_set_chunk_64))]
         {
             is_full
                 & (self.0[4] == !0)
@@ -233,7 +233,7 @@ impl ByteSet {
                 & (self.0[7] == !0)
         }
 
-        #[cfg(byte_set_slot_64)]
+        #[cfg(byte_set_chunk_64)]
         is_full
     }
 
@@ -244,12 +244,12 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn is_ascii(&self) -> bool {
-        #[cfg(byte_set_slot_64)]
+        #[cfg(byte_set_chunk_64)]
         {
             (self.0[2] == 0) & (self.0[3] == 0)
         }
 
-        #[cfg(not(byte_set_slot_64))]
+        #[cfg(not(byte_set_chunk_64))]
         {
             (self.0[4] == 0)
                 & (self.0[5] == 0)
@@ -268,7 +268,7 @@ impl ByteSet {
             + (self.0[2].count_ones() as usize)
             + (self.0[3].count_ones() as usize);
 
-        #[cfg(not(byte_set_slot_64))]
+        #[cfg(not(byte_set_chunk_64))]
         {
             len + (self.0[4].count_ones() as usize)
                 + (self.0[5].count_ones() as usize)
@@ -276,7 +276,7 @@ impl ByteSet {
                 + (self.0[7].count_ones() as usize)
         }
 
-        #[cfg(byte_set_slot_64)]
+        #[cfg(byte_set_chunk_64)]
         len
     }
 
@@ -288,9 +288,9 @@ impl ByteSet {
 
     /// Returns the first (least) byte in `self`, or `None` if `self` is empty.
     pub fn first(&self) -> Option<u8> {
-        for (i, &slot) in self.0.iter().enumerate() {
-            if let Some(lsb) = slot::lsb(slot) {
-                return Some(lsb + (i * slot::INDEX_OFFSET) as u8);
+        for (i, &chunk) in self.0.iter().enumerate() {
+            if let Some(lsb) = chunk::lsb(chunk) {
+                return Some(lsb + (i * chunk::INDEX_OFFSET) as u8);
             }
         }
         None
@@ -299,9 +299,9 @@ impl ByteSet {
     /// Removes the first (least) byte in `self` and returns it, or `None` if
     /// `self` is empty.
     pub fn pop_first(&mut self) -> Option<u8> {
-        for (i, slot) in self.0.iter_mut().enumerate() {
-            if let Some(lsb) = slot::pop_lsb(slot) {
-                return Some(lsb + (i * slot::INDEX_OFFSET) as u8);
+        for (i, chunk) in self.0.iter_mut().enumerate() {
+            if let Some(lsb) = chunk::pop_lsb(chunk) {
+                return Some(lsb + (i * chunk::INDEX_OFFSET) as u8);
             }
         }
         None
@@ -310,10 +310,10 @@ impl ByteSet {
     /// Returns the last (greatest) byte in `self`, or `None` if `self` is
     /// empty.
     pub fn last(&self) -> Option<u8> {
-        for (i, &slot) in self.0.iter().rev().enumerate() {
-            if let Some(msb) = slot::msb(slot) {
+        for (i, &chunk) in self.0.iter().rev().enumerate() {
+            if let Some(msb) = chunk::msb(chunk) {
                 let i = LAST_SLOT_INDEX - i;
-                return Some(msb + (i * slot::INDEX_OFFSET) as u8);
+                return Some(msb + (i * chunk::INDEX_OFFSET) as u8);
             }
         }
         None
@@ -322,10 +322,10 @@ impl ByteSet {
     /// Removes the last (least) byte in `self` and returns it, or `None` if
     /// `self` is empty.
     pub fn pop_last(&mut self) -> Option<u8> {
-        for (i, slot) in self.0.iter_mut().rev().enumerate() {
-            if let Some(msb) = slot::pop_msb(slot) {
+        for (i, chunk) in self.0.iter_mut().rev().enumerate() {
+            if let Some(msb) = chunk::pop_msb(chunk) {
                 let i = LAST_SLOT_INDEX - i;
-                return Some(msb + (i * slot::INDEX_OFFSET) as u8);
+                return Some(msb + (i * chunk::INDEX_OFFSET) as u8);
             }
         }
         None
@@ -341,7 +341,7 @@ impl ByteSet {
     /// [`BTreeSet::insert`]: https://doc.rust-lang.org/std/collections/struct.BTreeSet.html#method.insert
     #[inline]
     pub fn insert(&mut self, byte: u8) {
-        let (index, shift) = slot_index_and_shift(byte);
+        let (index, shift) = chunk_index_and_shift(byte);
 
         self.0[index] |= 1 << shift;
     }
@@ -354,7 +354,7 @@ impl ByteSet {
         self.0[2] |= other.0[2];
         self.0[3] |= other.0[3];
 
-        #[cfg(not(byte_set_slot_64))]
+        #[cfg(not(byte_set_chunk_64))]
         {
             self.0[4] |= other.0[4];
             self.0[5] |= other.0[5];
@@ -367,7 +367,7 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn inserting(mut self, byte: u8) -> Self {
-        let (index, shift) = slot_index_and_shift(byte);
+        let (index, shift) = chunk_index_and_shift(byte);
 
         self.0[index] |= 1 << shift;
         self
@@ -392,7 +392,7 @@ impl ByteSet {
     /// [`BTreeSet::remove`]: https://doc.rust-lang.org/std/collections/struct.BTreeSet.html#method.remove
     #[inline]
     pub fn remove(&mut self, byte: u8) {
-        let (index, shift) = slot_index_and_shift(byte);
+        let (index, shift) = chunk_index_and_shift(byte);
 
         self.0[index] &= !(1 << shift);
     }
@@ -407,7 +407,7 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn removing(mut self, byte: u8) -> Self {
-        let (index, shift) = slot_index_and_shift(byte);
+        let (index, shift) = chunk_index_and_shift(byte);
 
         self.0[index] &= !(1 << shift);
         self
@@ -423,20 +423,20 @@ impl ByteSet {
     /// Sets `byte` in `self` to `enabled` in-place.
     #[inline]
     pub fn set(&mut self, byte: u8, enabled: bool) {
-        let (index, shift) = slot_index_and_shift(byte);
-        let slot = self.0[index];
+        let (index, shift) = chunk_index_and_shift(byte);
+        let chunk = self.0[index];
 
-        self.0[index] = (slot & !(1 << shift)) | ((enabled as Slot) << shift);
+        self.0[index] = (chunk & !(1 << shift)) | ((enabled as Chunk) << shift);
     }
 
     /// Returns a copy of `self` with `byte` set to `enabled`.
     #[inline]
     #[must_use]
     pub const fn setting(mut self, byte: u8, enabled: bool) -> Self {
-        let (index, shift) = slot_index_and_shift(byte);
-        let slot = self.0[index];
+        let (index, shift) = chunk_index_and_shift(byte);
+        let chunk = self.0[index];
 
-        self.0[index] = (slot & !(1 << shift)) | ((enabled as Slot) << shift);
+        self.0[index] = (chunk & !(1 << shift)) | ((enabled as Chunk) << shift);
         self
     }
 
@@ -444,15 +444,15 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn contains(&self, byte: u8) -> bool {
-        let (index, shift) = slot_index_and_shift(byte);
+        let (index, shift) = chunk_index_and_shift(byte);
 
         self.0[index] & (1 << shift) != 0
     }
 
     #[inline]
     #[must_use]
-    const fn slot_and_or(&self, other: &Self) -> Slot {
-        map_reduce_slots!(self, other, &, |)
+    const fn chunk_and_or(&self, other: &Self) -> Chunk {
+        map_reduce_chunks!(self, other, &, |)
     }
 
     /// Returns `true` if `self` contains any bytes in `other`.
@@ -460,7 +460,7 @@ impl ByteSet {
     #[must_use]
     // Not `const` because it may be later improved with SIMD intrinsics.
     pub fn contains_any(&self, other: &Self) -> bool {
-        self.slot_and_or(other) != 0
+        self.chunk_and_or(other) != 0
     }
 
     /// Returns `true` if `other` contains all bytes in `self`.
@@ -521,21 +521,21 @@ impl ByteSet {
     #[inline]
     #[must_use]
     pub const fn symmetric_difference(self, other: Self) -> Self {
-        map_slots!(self, ^, other)
+        map_chunks!(self, ^, other)
     }
 
     /// Returns a set with the bytes contained both in `self` and `other`.
     #[inline]
     #[must_use]
     pub const fn intersection(self, other: Self) -> Self {
-        map_slots!(self, &, other)
+        map_chunks!(self, &, other)
     }
 
     /// Returns a new set with the bytes contained in `self` or `other`.
     #[inline]
     #[must_use]
     pub const fn union(self, other: Self) -> Self {
-        map_slots!(self, |, other)
+        map_chunks!(self, |, other)
     }
 
     /// Returns a new set with the bytes not contained in `self`.
@@ -547,7 +547,7 @@ impl ByteSet {
     #[must_use]
     #[allow(clippy::should_implement_trait)]
     pub const fn not(self) -> Self {
-        map_slots!(self, !)
+        map_chunks!(self, !)
     }
 
     /// Returns `self` with its bits reversed.
@@ -560,13 +560,13 @@ impl ByteSet {
     // Not inlined because lots of code is generated on x86.
     pub const fn reverse_bits(self) -> Self {
         Self([
-            #[cfg(not(byte_set_slot_64))]
+            #[cfg(not(byte_set_chunk_64))]
             self.0[7].reverse_bits(),
-            #[cfg(not(byte_set_slot_64))]
+            #[cfg(not(byte_set_chunk_64))]
             self.0[6].reverse_bits(),
-            #[cfg(not(byte_set_slot_64))]
+            #[cfg(not(byte_set_chunk_64))]
             self.0[5].reverse_bits(),
-            #[cfg(not(byte_set_slot_64))]
+            #[cfg(not(byte_set_chunk_64))]
             self.0[4].reverse_bits(),
             self.0[3].reverse_bits(),
             self.0[2].reverse_bits(),
@@ -588,7 +588,7 @@ impl ByteSet {
             & (self.0[2] == other.0[2])
             & (self.0[3] == other.0[3]);
 
-        #[cfg(not(byte_set_slot_64))]
+        #[cfg(not(byte_set_chunk_64))]
         {
             eq & (self.0[4] == other.0[4])
                 & (self.0[5] == other.0[5])
@@ -596,7 +596,7 @@ impl ByteSet {
                 & (self.0[7] == other.0[7])
         }
 
-        #[cfg(byte_set_slot_64)]
+        #[cfg(byte_set_chunk_64)]
         eq
     }
 

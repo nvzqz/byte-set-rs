@@ -1,4 +1,4 @@
-use crate::{slot, ByteSet, LAST_SLOT_INDEX, NUM_SLOTS};
+use crate::{chunk, ByteSet, LAST_SLOT_INDEX, NUM_SLOTS};
 use core::iter;
 
 #[cfg(test)]
@@ -10,13 +10,13 @@ mod tests;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Iter {
     /// The set being iterated over. It is mutated in-place as bits are popped
-    /// from each slot.
+    /// from each chunk.
     byte_set: ByteSet,
 
-    /// The current slot index when iterating forwards.
+    /// The current chunk index when iterating forwards.
     forward_index: usize,
 
-    /// The current slot index when iterating backwards.
+    /// The current chunk index when iterating backwards.
     backward_index: usize,
 }
 
@@ -55,10 +55,10 @@ impl Iterator for Iter {
         for index in range {
             self.forward_index = index;
 
-            let slot = &mut self.byte_set.0[index];
+            let chunk = &mut self.byte_set.0[index];
 
-            if let Some(lsb) = slot::pop_lsb(slot) {
-                return Some(lsb + (index * slot::INDEX_OFFSET) as u8);
+            if let Some(lsb) = chunk::pop_lsb(chunk) {
+                return Some(lsb + (index * chunk::INDEX_OFFSET) as u8);
             }
         }
 
@@ -101,10 +101,10 @@ impl DoubleEndedIterator for Iter {
             self.backward_index = index;
 
             // SAFETY: This invariant is tested.
-            let slot = unsafe { self.byte_set.0.get_unchecked_mut(index) };
+            let chunk = unsafe { self.byte_set.0.get_unchecked_mut(index) };
 
-            if let Some(msb) = slot::pop_msb(slot) {
-                return Some(msb + (index * slot::INDEX_OFFSET) as u8);
+            if let Some(msb) = chunk::pop_msb(chunk) {
+                return Some(msb + (index * chunk::INDEX_OFFSET) as u8);
             }
         }
 
