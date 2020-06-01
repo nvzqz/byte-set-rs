@@ -552,7 +552,7 @@ impl ByteSet {
         Ok(set)
     }
 
-    /// The set of all ASCII characters: U+0000 NUL ..= U+007F DEL.
+    /// The set of all ASCII characters: U+0000 NULL ..= U+007F DELETE.
     ///
     /// # Examples
     ///
