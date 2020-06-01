@@ -667,6 +667,13 @@ impl From<&[u8]> for ByteSet {
     }
 }
 
+impl From<&str> for ByteSet {
+    #[inline]
+    fn from(s: &str) -> Self {
+        s.as_bytes().into()
+    }
+}
+
 impl Extend<u8> for ByteSet {
     fn extend<T: IntoIterator<Item = u8>>(&mut self, iter: T) {
         iter.into_iter().for_each(|byte| self.insert(byte));
