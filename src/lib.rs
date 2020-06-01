@@ -37,6 +37,7 @@
 //!     - [Remove](#remove)
 //!     - [Iterate](#iterate)
 //!     - [Contains](#contains)
+//!     - [Subset](#subset)
 //!     - [Min and Max](#min-and-max)
 //!   - [`byte_set!` Macro](#byte_set-macro)
 //! - [Implementation](#implementation)
