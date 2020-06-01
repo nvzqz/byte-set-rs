@@ -553,6 +553,23 @@ impl ByteSet {
     }
 
     /// The set of all ASCII characters: U+0000 NUL ..= U+007F DEL.
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii`] returns `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII {
+    ///     assert!(byte.is_ascii());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII {
+    ///     assert!(!byte.is_ascii());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii
     pub const ASCII: Self = {
         #[cfg(byte_set_chunk_64)]
         {
@@ -569,10 +586,46 @@ impl ByteSet {
     ///
     /// - U+0041 'A' ..= U+005A 'Z'
     /// - U+0061 'a' ..= U+007A 'z'
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_alphabetic`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_ALPHABETIC {
+    ///     assert!(byte.is_ascii_alphabetic());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_ALPHABETIC {
+    ///     assert!(!byte.is_ascii_alphabetic());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_alphabetic`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_alphabetic
     pub const ASCII_ALPHABETIC: Self =
         Self::ASCII_LOWERCASE.inserting_all(Self::ASCII_UPPERCASE);
 
     /// The set of all ASCII uppercase characters: U+0041 'A' ..= U+005A 'Z'.
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_uppercase`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_UPPERCASE {
+    ///     assert!(byte.is_ascii_uppercase());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_UPPERCASE {
+    ///     assert!(!byte.is_ascii_uppercase());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_uppercase`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_uppercase
     pub const ASCII_UPPERCASE: Self = byte_set![
         b'A', b'B', b'C', b'D', b'E', b'F', b'G', b'H', b'I', b'J', b'K', b'L',
         b'M', b'N', b'O', b'P', b'Q', b'R', b'S', b'T', b'U', b'V', b'W', b'X',
@@ -580,6 +633,24 @@ impl ByteSet {
     ];
 
     /// The set of all ASCII lowercase characters: U+0061 'a' ..= U+007A 'z'.
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_lowercase`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_LOWERCASE {
+    ///     assert!(byte.is_ascii_lowercase());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_LOWERCASE {
+    ///     assert!(!byte.is_ascii_lowercase());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_lowercase`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_lowercase
     pub const ASCII_LOWERCASE: Self = byte_set![
         b'a', b'b', b'c', b'd', b'e', b'f', b'g', b'h', b'i', b'j', b'k', b'l',
         b'm', b'n', b'o', b'p', b'q', b'r', b's', b't', b'u', b'v', b'w', b'x',
@@ -591,10 +662,45 @@ impl ByteSet {
     /// - U+0041 'A' ..= U+005A 'Z'
     /// - U+0061 'a' ..= U+007A 'z'
     /// - U+0030 '0' ..= U+0039 '9'
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_alphanumeric`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_ALPHANUMERIC {
+    ///     assert!(byte.is_ascii_alphanumeric());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_ALPHANUMERIC {
+    ///     assert!(!byte.is_ascii_alphanumeric());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_alphanumeric`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_alphanumeric
     pub const ASCII_ALPHANUMERIC: Self =
         Self::ASCII_ALPHABETIC.inserting_all(Self::ASCII_DIGIT);
 
     /// The set of all ASCII decimal digits: U+0030 '0' ..= U+0039 '9'.
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_digit`] returns `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_DIGIT {
+    ///     assert!(byte.is_ascii_digit());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_DIGIT {
+    ///     assert!(!byte.is_ascii_digit());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_digit`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_digit
     pub const ASCII_DIGIT: Self =
         byte_set![b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9'];
 
