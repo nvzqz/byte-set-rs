@@ -11,7 +11,7 @@ homepage = "https://github.com/nvzqz/byte-set-rs"
 documentation = "https://docs.rs/byte_set"
 keywords = ["byte", "set", "search", "string"]
 categories = ["no-std", "data-structures", "rust-patterns", "embedded"]
-include = ["Cargo.toml", "src", "benches", "README*", "CHANGELOG*", "LICENSE*"]
+include = ["Cargo.toml", "src", "benches", "README*", "CHANGELOG*", "LICENSE*", "build.rs"]
 build = "build.rs"
 
 [package.metadata.docs.rs]
