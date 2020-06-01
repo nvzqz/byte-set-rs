@@ -141,6 +141,19 @@ impl ByteSet {
         Ok(set)
     }
 
+    /// The set of all ASCII characters: U+0000 NUL ..= U+007F DEL.
+    pub const ASCII: Self = {
+        #[cfg(byte_set_slot_64)]
+        {
+            Self([!0, !0, 0, 0])
+        }
+
+        #[cfg(not(byte_set_slot_64))]
+        {
+            Self([!0, !0, !0, !0, 0, 0, 0, 0])
+        }
+    };
+
     /// The set of all ASCII alphabetic characters:
     ///
     /// - U+0041 'A' ..= U+005A 'Z'
