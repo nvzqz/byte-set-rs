@@ -704,6 +704,144 @@ impl ByteSet {
     pub const ASCII_DIGIT: Self =
         byte_set![b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9'];
 
+    /// The set of all ASCII hexadecimal digits:
+    ///
+    /// - U+0030 '0' ..= U+0039 '9'
+    /// - U+0041 'A' ..= U+0046 'F'
+    /// - U+0061 'a' ..= U+0066 'f'
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_hexdigit`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_HEXDIGIT {
+    ///     assert!(byte.is_ascii_hexdigit());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_HEXDIGIT {
+    ///     assert!(!byte.is_ascii_hexdigit());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_hexdigit`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_hexdigit
+    pub const ASCII_HEXDIGIT: Self = Self::ASCII_DIGIT
+        .inserting_all(byte_set![b'A', b'B', b'C', b'D', b'E', b'F'])
+        .inserting_all(byte_set![b'a', b'b', b'c', b'd', b'e', b'f']);
+
+    /// The set of all ASCII punctuation characters:
+    ///
+    /// - U+0021 ..= U+002F `! " # $ % & ' ( ) * + , - . /`
+    /// - U+003A ..= U+0040 `: ; < = > ? @`
+    /// - U+005B ..= U+0060 ``[ \ ] ^ _ ` ``
+    /// - U+007B ..= U+007E `{ | } ~`
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_punctuation`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_PUNCTUATION {
+    ///     assert!(byte.is_ascii_punctuation());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_PUNCTUATION {
+    ///     assert!(!byte.is_ascii_punctuation());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_punctuation`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_punctuation
+    pub const ASCII_PUNCTUATION: Self = byte_set![
+        b'!', b'"', b'#', b'$', b'%', b'&', b'\'', b'(', b')', b'*', b'+',
+        b',', b'-', b'.', b'/', b':', b';', b'<', b'=', b'>', b'?', b'@', b'[',
+        b'\\', b']', b'^', b'_', b'`', b'{', b'|', b'}', b'~',
+    ];
+
+    /// The set of all ASCII graphic characters: U+0021 '!' ..= U+007E '~'.
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_graphic`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_GRAPHIC {
+    ///     assert!(byte.is_ascii_graphic());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_GRAPHIC {
+    ///     assert!(!byte.is_ascii_graphic());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_graphic`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_graphic
+    pub const ASCII_GRAPHIC: Self =
+        Self::ASCII_ALPHANUMERIC.inserting_all(Self::ASCII_PUNCTUATION);
+
+    /// The set of all ASCII whitespace characters:
+    ///
+    /// - U+0020 SPACE
+    /// - U+0009 HORIZONTAL TAB
+    /// - U+000A LINE FEED
+    /// - U+000C FORM FEED
+    /// - U+000D CARRIAGE RETURN
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_whitespace`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_WHITESPACE {
+    ///     assert!(byte.is_ascii_whitespace());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_WHITESPACE {
+    ///     assert!(!byte.is_ascii_whitespace());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_whitespace`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_whitespace
+    pub const ASCII_WHITESPACE: Self =
+        byte_set![b'\t', b'\n', 0x0C, b'\r', b' '];
+
+    /// The set of all ASCII control characters:
+    ///
+    /// - U+0000 NUL ..= U+001F UNIT SEPARATOR
+    /// - U+007F DELETE.
+    ///
+    /// Note that most ASCII whitespace characters are control characters, but
+    /// SPACE is not.
+    ///
+    /// # Examples
+    ///
+    /// This contains all bytes for which [`u8::is_ascii_control`] returns
+    /// `true`:
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// for byte in ByteSet::ASCII_CONTROL {
+    ///     assert!(byte.is_ascii_control());
+    /// }
+    ///
+    /// for byte in !ByteSet::ASCII_CONTROL {
+    ///     assert!(!byte.is_ascii_control());
+    /// }
+    /// ```
+    ///
+    /// [`u8::is_ascii_whitespace`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_whitespace
+    pub const ASCII_CONTROL: Self = byte_set![
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, b'\t', b'\n',
+        0x0B, 0x0C, b'\r', 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+        0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x7F,
+    ];
+
     /// Returns `true` if `self` contains no bytes.
     ///
     /// This is more efficient than checking `self.len() == 0`.
