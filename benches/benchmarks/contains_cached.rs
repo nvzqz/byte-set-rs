@@ -1,9 +1,12 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
-use hashbrown::HashSet as HashbrownSet;
 use rand::Rng;
 use std::collections::{BTreeSet, HashSet};
 
-use crate::util::{self, Bool256, Rand};
+use crate::util::{
+    self,
+    hash::{HashbrownSet, NoHashSet, NoHashbrownSet},
+    Bool256, Rand,
+};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {
@@ -79,6 +82,21 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
+        let hash_set = NoHashSet::<u8>::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("HashSet<u8> (No Hash)", size),
+            &hash_set,
+            |b, hash_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(hash_set.contains(&byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || black_box(HashbrownSet::<u8>::rand_len(size, &mut rng)),
@@ -89,6 +107,24 @@ pub fn benches(criterion: &mut Criterion) {
                 BatchSize::SmallInput,
             )
         });
+
+        group.bench_function(
+            BenchmarkId::new("HashbrownSet<u8> (No Hash)", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        black_box(NoHashbrownSet::<u8>::rand_len(
+                            size, &mut rng,
+                        ))
+                    },
+                    |hash_set| {
+                        hash_set.clear();
+                        black_box(hash_set);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
 
         let btree_set = BTreeSet::<u8>::rand_len(size, &mut rng);
         group.bench_with_input(

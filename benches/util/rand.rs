@@ -1,7 +1,10 @@
 use byte_set::ByteSet;
 use hashbrown::HashSet as HashbrownSet;
 use rand::{seq::SliceRandom, Rng};
-use std::collections::{BTreeSet, BinaryHeap, HashSet};
+use std::{
+    collections::{BTreeSet, BinaryHeap, HashSet},
+    hash::BuildHasher,
+};
 
 /// Returns an array of bytes that has been shuffled.
 pub fn shuffled_bytes<R: Rng>(rng: &mut R) -> [u8; 256] {
@@ -42,7 +45,7 @@ impl Rand for BinaryHeap<u8> {
     }
 }
 
-impl Rand for HashSet<u8> {
+impl<S: BuildHasher + Default> Rand for HashSet<u8, S> {
     fn rand_len<R: Rng>(len: usize, rng: &mut R) -> Self {
         let input = shuffled_bytes(rng);
         input[..len].iter().cloned().collect()
@@ -58,7 +61,7 @@ impl Rand for Vec<u8> {
 
 // Hashbrown:
 
-impl Rand for HashbrownSet<u8> {
+impl<S: BuildHasher + Default> Rand for HashbrownSet<u8, S> {
     fn rand_len<R: Rng>(len: usize, rng: &mut R) -> Self {
         let input = shuffled_bytes(rng);
         input[..len].iter().cloned().collect()

@@ -1,10 +1,10 @@
 use std::convert::TryFrom;
 
 pub mod bool256;
-pub use bool256::Bool256;
-
+pub mod hash;
 pub mod rand;
-pub use self::rand::Rand;
+
+pub use self::{bool256::Bool256, rand::Rand};
 
 /// Input sizes for benchmarks.
 pub const SIZES: &[usize] = &[0, 8, 16, 32, 64, 128, 192, 256];

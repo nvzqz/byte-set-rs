@@ -1,9 +1,13 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
-use hashbrown::HashSet as HashbrownSet;
 use rand::{seq::SliceRandom, Rng};
 use std::collections::{BTreeSet, HashSet};
 
-use crate::util::{self, rand::shuffled_bytes, Bool256};
+use crate::util::{
+    self,
+    hash::{HashbrownSet, NoHashSet, NoHashbrownSet},
+    rand::shuffled_bytes,
+    Bool256,
+};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {
@@ -74,6 +78,32 @@ pub fn benches(criterion: &mut Criterion) {
             )
         });
 
+        group.bench_function(
+            BenchmarkId::new("HashSet<u8> (No Hash)", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let bytes = shuffled_bytes(&mut rng);
+                        let bytes = &bytes[..size];
+
+                        if let Some(&byte) = bytes.choose(&mut rng) {
+                            black_box((byte, bytes.iter().cloned().collect()))
+                        } else {
+                            black_box((
+                                rng.gen::<u8>(),
+                                NoHashSet::<u8>::default(),
+                            ))
+                        }
+                    },
+                    |(byte, hash_set)| {
+                        hash_set.remove(byte);
+                        black_box(hash_set);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
@@ -93,6 +123,32 @@ pub fn benches(criterion: &mut Criterion) {
                 BatchSize::SmallInput,
             )
         });
+
+        group.bench_function(
+            BenchmarkId::new("HashbrownSet<u8> (No Hash)", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let bytes = shuffled_bytes(&mut rng);
+                        let bytes = &bytes[..size];
+
+                        if let Some(&byte) = bytes.choose(&mut rng) {
+                            black_box((byte, bytes.iter().cloned().collect()))
+                        } else {
+                            black_box((
+                                rng.gen::<u8>(),
+                                NoHashbrownSet::<u8>::default(),
+                            ))
+                        }
+                    },
+                    |(byte, hash_set)| {
+                        hash_set.remove(byte);
+                        black_box(hash_set);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
 
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(

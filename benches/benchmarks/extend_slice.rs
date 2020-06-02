@@ -1,8 +1,12 @@
 use criterion::{black_box, BatchSize, BenchmarkId, Criterion, Throughput};
-use hashbrown::HashSet as HashbrownSet;
 use std::collections::{BTreeSet, BinaryHeap, HashSet};
 
-use crate::util::{self, rand::shuffled_bytes, Bool256};
+use crate::util::{
+    self,
+    hash::{HashbrownSet, NoHashSet, NoHashbrownSet},
+    rand::shuffled_bytes,
+    Bool256,
+};
 use byte_set::ByteSet;
 
 pub fn benches(criterion: &mut Criterion) {
@@ -55,6 +59,23 @@ pub fn benches(criterion: &mut Criterion) {
             )
         });
 
+        group.bench_function(
+            BenchmarkId::new("HashSet<u8> (No Hash)", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let bytes = shuffled_bytes(&mut rng);
+                        black_box((bytes, NoHashSet::<u8>::default()))
+                    },
+                    |(bytes, hash_set)| {
+                        hash_set.extend(&bytes[..size]);
+                        black_box(hash_set);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
@@ -68,6 +89,23 @@ pub fn benches(criterion: &mut Criterion) {
                 BatchSize::SmallInput,
             )
         });
+
+        group.bench_function(
+            BenchmarkId::new("NoHashbrownSet<u8> (No Hash)", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let bytes = shuffled_bytes(&mut rng);
+                        black_box((bytes, NoHashbrownSet::<u8>::default()))
+                    },
+                    |(bytes, hash_set)| {
+                        hash_set.extend(&bytes[..size]);
+                        black_box(hash_set);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
 
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(
