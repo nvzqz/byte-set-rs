@@ -368,7 +368,7 @@ at your choosing.
 <!-- These links must be replaced with local ones when used in crate docs: -->
 [`byte_set!`]:          https://docs.rs/byte_set/0.1.0/byte_set/macro.byte_set.html
 [`ByteSet`]:            https://docs.rs/byte_set/0.1.0/byte_set/struct.ByteSet.html
-[`contains_all`]:       https://docs.rs/byte_set/0.1.0/byte_set/struct.ByteSet.html#method.contains_all
+[`contains_any`]:       https://docs.rs/byte_set/0.1.0/byte_set/struct.ByteSet.html#method.contains_any
 [`contains`]:           https://docs.rs/byte_set/0.1.0/byte_set/struct.ByteSet.html#method.contains
 [`extend`]:             https://docs.rs/byte_set/0.1.0/byte_set/struct.ByteSet.html#impl-Extend%3Cu8%3E
 [`first`]:              https://docs.rs/byte_set/0.1.0/byte_set/struct.ByteSet.html#method.first

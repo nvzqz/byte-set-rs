@@ -394,7 +394,7 @@
 //!
 //! [`byte_set!`]:          macro.byte_set.html
 //! [`ByteSet`]:            struct.ByteSet.html
-//! [`contains_all`]:       struct.ByteSet.html#method.contains_all
+//! [`contains_any`]:       struct.ByteSet.html#method.contains_any
 //! [`contains`]:           struct.ByteSet.html#method.contains
 //! [`extend`]:             struct.ByteSet.html#impl-Extend%3Cu8%3E
 //! [`first`]:              struct.ByteSet.html#method.first
