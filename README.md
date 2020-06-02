@@ -29,20 +29,20 @@ If you found this library useful, please consider
 
 ## Table of Contents
 
-- [Usage](#usage)
-- [Examples](#examples)
-  - [`ByteSet` Type](#byteset-type)
-    - [Insert](#insert)
-    - [Extend](#extend)
-    - [Remove](#remove)
-    - [Iterate](#iterate)
-    - [Contains](#contains)
-    - [Subset](#subset)
-    - [Min and Max](#min-and-max)
-  - [`byte_set!` Macro](#byte_set-macro)
-- [Implementation](#implementation)
-- [Benchmarks](#benchmarks)
-- [License](#license)
+1. [Usage](#usage)
+2. [Examples](#examples)
+   1. [`ByteSet` Type](#byteset-type)
+      1. [Insert](#insert)
+      2. [Extend](#extend)
+      3. [Remove](#remove)
+      4. [Iterate](#iterate)
+      5. [Contains](#contains)
+      6. [Subset](#subset)
+      7. [Min and Max](#min-and-max)
+   2. [`byte_set!` Macro](#byte_set-macro)
+3. [Implementation](#implementation)
+4. [Benchmarks](#benchmarks)
+5. [License](#license)
 
 ## Usage
 
