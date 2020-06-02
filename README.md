@@ -293,14 +293,14 @@ the last byte (255).
 Given the following [`ByteSet`]:
 
 ```rust
-let bytes = byte_set![0, 1, 2, 6, 7, 8, 244];
+let bytes = byte_set![0, 1, 4, 5, 244];
 ```
 
 The in-memory representation of `bytes` would look like:
 
 ```text
- Byte: 0 1 2 3 4 5 6 7 8 9 ... 253 244 255
-Value: 1 1 1 0 0 0 1 1 1 0 ...  0   1   0
+ Byte: 0 1 2 3 4 5 6 7 ... 253 244 255
+Value: 1 1 0 0 1 1 0 0 ...  0   1   0
 ```
 
 This bit mask is composed of either `[u64; 4]` or `[u32; 8]` depending on the
