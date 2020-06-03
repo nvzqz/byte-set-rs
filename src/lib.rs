@@ -1113,6 +1113,9 @@ impl ByteSet {
     ///
     /// This is also known as a [Bloom filter].
     ///
+    /// If you actually end up using this function, please contact me. I'm
+    /// curious to know for what this is actually useful.
+    ///
     /// [Bloom filter]: https://en.wikipedia.org/wiki/Bloom_filter
     #[inline]
     #[must_use]
