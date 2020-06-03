@@ -177,6 +177,24 @@ pub fn benches(criterion: &mut Criterion) {
                 BatchSize::SmallInput,
             )
         });
+
+        group.bench_function(
+            BenchmarkId::new("Vec<u8> (Binary Search)", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let mut vec = Vec::<u8>::rand_len(size, &mut rng);
+                        vec.sort_unstable();
+
+                        black_box((rng.gen::<u8>(), vec))
+                    },
+                    |(byte, vec)| {
+                        black_box(vec.binary_search(&byte).is_ok());
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
     }
 
     group.finish();
