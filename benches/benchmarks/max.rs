@@ -3,7 +3,7 @@ use std::collections::{BTreeSet, BinaryHeap, HashSet};
 
 use crate::util::{
     self,
-    hash::{HashbrownSet, NoHashSet, NoHashbrownSet},
+    hash::{HashbrownSet, IdentityHashSet, IdentityHashbrownSet},
     Bool256, Rand,
 };
 use byte_set::ByteSet;
@@ -58,10 +58,14 @@ pub fn benches(criterion: &mut Criterion) {
         });
 
         group.bench_function(
-            BenchmarkId::new("HashSet<u8> (No Hash)", size),
+            BenchmarkId::new("HashSet<u8> (Identity Hash)", size),
             |b| {
                 b.iter_batched_ref(
-                    || black_box(NoHashSet::<u8>::rand_len(size, &mut rng)),
+                    || {
+                        black_box(IdentityHashSet::<u8>::rand_len(
+                            size, &mut rng,
+                        ))
+                    },
                     |hash_set| {
                         black_box(hash_set.iter().max());
                     },
@@ -81,11 +85,11 @@ pub fn benches(criterion: &mut Criterion) {
         });
 
         group.bench_function(
-            BenchmarkId::new("HashbrownSet<u8> (No Hash)", size),
+            BenchmarkId::new("HashbrownSet<u8> (Identity Hash)", size),
             |b| {
                 b.iter_batched_ref(
                     || {
-                        black_box(NoHashbrownSet::<u8>::rand_len(
+                        black_box(IdentityHashbrownSet::<u8>::rand_len(
                             size, &mut rng,
                         ))
                     },

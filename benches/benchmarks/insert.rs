@@ -3,7 +3,7 @@ use std::collections::{BTreeSet, BinaryHeap, HashSet};
 
 use crate::util::{
     self,
-    hash::{HashbrownSet, NoHashSet, NoHashbrownSet},
+    hash::{HashbrownSet, IdentityHashSet, IdentityHashbrownSet},
     rand::shuffled_bytes,
     Bool256,
 };
@@ -66,12 +66,12 @@ pub fn benches(criterion: &mut Criterion) {
         });
 
         group.bench_function(
-            BenchmarkId::new("HashSet<u8> (No Hash)", size),
+            BenchmarkId::new("HashSet<u8> (Identity Hash)", size),
             |b| {
                 b.iter_batched_ref(
                     || {
                         let bytes = shuffled_bytes(&mut rng);
-                        black_box((bytes, NoHashSet::<u8>::default()))
+                        black_box((bytes, IdentityHashSet::<u8>::default()))
                     },
                     |(bytes, hash_set)| {
                         for &byte in &bytes[..size] {
@@ -101,12 +101,15 @@ pub fn benches(criterion: &mut Criterion) {
         });
 
         group.bench_function(
-            BenchmarkId::new("HashbrownSet<u8> (No Hash)", size),
+            BenchmarkId::new("HashbrownSet<u8> (Identity Hash)", size),
             |b| {
                 b.iter_batched_ref(
                     || {
                         let bytes = shuffled_bytes(&mut rng);
-                        black_box((bytes, NoHashbrownSet::<u8>::default()))
+                        black_box((
+                            bytes,
+                            IdentityHashbrownSet::<u8>::default(),
+                        ))
                     },
                     |(bytes, hash_set)| {
                         for &byte in &bytes[..size] {
