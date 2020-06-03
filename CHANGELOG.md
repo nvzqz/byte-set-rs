@@ -8,6 +8,8 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [Unreleased]
 
+## [0.1.1] - 2020-06-03
+
 ### Added
 
 - `ByteSet::is_ascii_alphabetic`: returns `true` if [`u8::is_ascii_alphabetic`] returns `true` for all bytes.
@@ -46,4 +48,5 @@ Initial release!
 [`u8::is_ascii_whitespace`]:   https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_whitespace
 [`u8::is_ascii_control`]:      https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_control
 
-[Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.1...HEAD
+[0.1.1]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.0...v0.1.1

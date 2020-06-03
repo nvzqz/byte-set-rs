@@ -49,7 +49,7 @@ checksum = "5356f1d23ee24a1f785a56d1d1a5f0fd5b0f6a0c0fb2412ce11da71649ab78f6"
 
 [[package]]
 name = "byte_set"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "criterion",
  "hashbrown",
