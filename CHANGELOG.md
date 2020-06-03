@@ -10,8 +10,7 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ### Added
 
-- `ByteSet::maybe_contains`: A [Bloom filter] function that returns `true` if a
-  byte is maybe contained in `self`, with 1/8 (12.5%) probability.
+- `ByteSet::maybe_contains`: a [Bloom filter] function.
 
 ## 0.1.0 - 2020-06-01
 
