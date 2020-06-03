@@ -794,29 +794,6 @@ impl ByteSet {
         self.0[index] & (1 << shift) != 0
     }
 
-    /// Returns `true` if `byte` is maybe contained in `self`.
-    ///
-    /// This is also known as a [Bloom filter].
-    ///
-    /// The probability of this returning `true` is dependent on the shape of
-    /// inserted data. The implementation returns `true` if the byte that
-    /// contains the bit representing `byte` is not 0. For example: if only 7 is
-    /// inserted, this will return `true` for 0 through 6 as well, but not 8 and
-    /// after.
-    ///
-    /// Use this only if [`contains`](#method.contains) is somehow too slow and
-    /// only a probability is needed.
-    ///
-    /// If you actually end up using this function, please contact me. I'm
-    /// curious to know for what this is actually useful.
-    ///
-    /// [Bloom filter]: https://en.wikipedia.org/wiki/Bloom_filter
-    #[inline]
-    #[must_use]
-    pub fn maybe_contains(&self, byte: u8) -> bool {
-        self.as_bytes()[(byte >> 3) as usize] != 0
-    }
-
     #[inline]
     #[must_use]
     const fn chunk_and_or(&self, other: &Self) -> Chunk {

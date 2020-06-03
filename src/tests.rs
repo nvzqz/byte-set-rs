@@ -99,18 +99,3 @@ fn last() {
     assert_last_eq!(set, None);
     assert_eq!(set.pop_last(), None);
 }
-
-#[test]
-fn maybe_contains() {
-    let mut set = ByteSet::new();
-
-    for byte in 0..=u8::max_value() {
-        assert!(!set.maybe_contains(byte));
-
-        set.insert(byte);
-        assert!(set.maybe_contains(byte));
-
-        set.remove(byte);
-        assert!(!set.maybe_contains(byte));
-    }
-}

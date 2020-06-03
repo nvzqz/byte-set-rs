@@ -10,7 +10,6 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ### Added
 
-- `ByteSet::maybe_contains`: a [Bloom filter] function.
 - `ByteSet::is_ascii_alphabetic`: returns `true` if [`u8::is_ascii_alphabetic`] returns `true` for all bytes.
 - `ByteSet::is_ascii_uppercase`: returns `true` if [`u8::is_ascii_uppercase`] returns `true` for all bytes.
 - `ByteSet::is_ascii_lowercase`: returns `true` if [`u8::is_ascii_lowercase`] returns `true` for all bytes.
