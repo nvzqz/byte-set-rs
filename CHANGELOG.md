@@ -8,6 +8,8 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [Unreleased]
 
+## [0.1.2] - 2020-06-03
+
 ### Removed
 
 - `build.rs`, which improves compile time and allows this to be used in external
@@ -53,5 +55,6 @@ Initial release!
 [`u8::is_ascii_whitespace`]:   https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_whitespace
 [`u8::is_ascii_control`]:      https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_control
 
-[Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.2...HEAD
+[0.1.2]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.1...v0.1.2
 [0.1.1]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.0...v0.1.1
