@@ -32,6 +32,24 @@ pub fn benches(criterion: &mut Criterion) {
             )
         });
 
+        group.bench_function(
+            BenchmarkId::new("ByteSet (Bloom Filter)", size),
+            |b| {
+                b.iter_batched(
+                    || {
+                        black_box((
+                            rng.gen::<u8>(),
+                            ByteSet::rand_len(size, &mut rng),
+                        ))
+                    },
+                    |(byte, byte_set)| {
+                        black_box(byte_set.maybe_contains(byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("[bool; 256]", size), |b| {
             b.iter_batched(
                 || {

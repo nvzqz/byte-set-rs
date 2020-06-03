@@ -37,6 +37,21 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
+        let byte_set = ByteSet::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("ByteSet (Bloom Filter)", size),
+            &byte_set,
+            |b, byte_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(byte_set.maybe_contains(byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         let bool256 = Bool256::rand_len(size, &mut rng);
         group.bench_with_input(
             BenchmarkId::new("[bool; 256]", size),
