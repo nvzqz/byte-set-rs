@@ -51,7 +51,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! byte_set = "0.1"
+//! byte_set = "0.1.2"
 //! ```
 //!
 //! To import the [`byte_set!`] macro, add this to your crate root (`main.rs` or
