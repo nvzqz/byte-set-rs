@@ -893,25 +893,148 @@ impl ByteSet {
         is_full
     }
 
-    /// Returns `true` if `self` contains only ASCII characters, or is empty.
+    /// Returns `true` if [`u8::is_ascii`] returns `true` for all bytes in
+    /// `self`.
     ///
-    /// This is more efficient than checking whether `self.last()` is ASCII or
-    /// `None`.
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii`]:
+    /// https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii
     #[inline]
     #[must_use]
     pub const fn is_ascii(&self) -> bool {
-        #[cfg(byte_set_chunk_64)]
-        {
-            (self.0[2] == 0) & (self.0[3] == 0)
-        }
+        self._is_subset(&Self::ASCII)
+    }
 
-        #[cfg(not(byte_set_chunk_64))]
-        {
-            (self.0[4] == 0)
-                & (self.0[5] == 0)
-                & (self.0[6] == 0)
-                & (self.0[7] == 0)
-        }
+    /// Returns `true` if [`u8::is_ascii_alphabetic`] returns `true` for all
+    /// bytes in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_alphabetic`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_alphabetic
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_alphabetic(&self) -> bool {
+        self._is_subset(&Self::ASCII_ALPHABETIC)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_uppercase`] returns `true` for all
+    /// bytes in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_uppercase`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_uppercase
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_uppercase(&self) -> bool {
+        self._is_subset(&Self::ASCII_UPPERCASE)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_lowercase`] returns `true` for all
+    /// bytes in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_lowercase`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_lowercase
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_lowercase(&self) -> bool {
+        self._is_subset(&Self::ASCII_LOWERCASE)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_alphanumeric`] returns `true` for all
+    /// bytes in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_alphanumeric`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_alphanumeric
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_alphanumeric(&self) -> bool {
+        self._is_subset(&Self::ASCII_ALPHANUMERIC)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_digit`] returns `true` for all bytes in
+    /// `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_digit`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_digit
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_digit(&self) -> bool {
+        self._is_subset(&Self::ASCII_DIGIT)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_hexdigit`] returns `true` for all bytes
+    /// in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_hexdigit`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_hexdigit
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_hexdigit(&self) -> bool {
+        self._is_subset(&Self::ASCII_HEXDIGIT)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_punctuation`] returns `true` for all
+    /// bytes in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_punctuation`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_punctuation
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_punctuation(&self) -> bool {
+        self._is_subset(&Self::ASCII_PUNCTUATION)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_graphic`] returns `true` for all bytes
+    /// in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_graphic`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_graphic
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_graphic(&self) -> bool {
+        self._is_subset(&Self::ASCII_GRAPHIC)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_whitespace`] returns `true` for all
+    /// bytes in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_whitespace`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_whitespace
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_whitespace(&self) -> bool {
+        self._is_subset(&Self::ASCII_WHITESPACE)
+    }
+
+    /// Returns `true` if [`u8::is_ascii_control`] returns `true` for all bytes
+    /// in `self`.
+    ///
+    /// This is significantly more efficient than checking each byte in `self`
+    /// individually.
+    ///
+    /// [`u8::is_ascii_control`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_control
+    #[inline]
+    #[must_use]
+    pub const fn is_ascii_control(&self) -> bool {
+        self._is_subset(&Self::ASCII_CONTROL)
     }
 
     /// Returns the number of bytes contained in `self`.
@@ -1142,12 +1265,17 @@ impl ByteSet {
         self.chunk_and_or(other) != 0
     }
 
+    #[inline]
+    const fn _is_subset(&self, other: &Self) -> bool {
+        self.intersection(*other).eq(self)
+    }
+
     /// Returns `true` if `other` contains all bytes in `self`.
     #[inline]
     #[must_use]
     // Not `const` because it may be later improved with SIMD intrinsics.
     pub fn is_subset(&self, other: &Self) -> bool {
-        self.intersection(*other).eq(self)
+        self._is_subset(other)
     }
 
     /// Returns `true` if `other` contains all bytes in `self` and at least one
