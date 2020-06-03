@@ -5,16 +5,16 @@ use std::{
 
 pub use hashbrown::HashSet as HashbrownSet;
 
-pub type IdentityHashSet<T> = HashSet<T, IdentityHashBuilder>;
-pub type IdentityHashbrownSet<T> = HashbrownSet<T, IdentityHashBuilder>;
+pub type IdentityHashSet<T> = HashSet<T, IdentityHasherBuilder>;
+pub type IdentityHashbrownSet<T> = HashbrownSet<T, IdentityHasherBuilder>;
 
 /// A hasher that passes the input byte directly.
 #[derive(Clone, Copy, Default)]
-pub struct IdentityHash {
+pub struct IdentityHasher {
     byte: u8,
 }
 
-impl Hasher for IdentityHash {
+impl Hasher for IdentityHasher {
     fn finish(&self) -> u64 {
         self.byte as u64
     }
@@ -29,10 +29,10 @@ impl Hasher for IdentityHash {
 }
 
 #[derive(Clone, Copy, Default)]
-pub struct IdentityHashBuilder;
+pub struct IdentityHasherBuilder;
 
-impl BuildHasher for IdentityHashBuilder {
-    type Hasher = IdentityHash;
+impl BuildHasher for IdentityHasherBuilder {
+    type Hasher = IdentityHasher;
 
     fn build_hasher(&self) -> Self::Hasher {
         Default::default()
