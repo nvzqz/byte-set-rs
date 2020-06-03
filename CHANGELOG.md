@@ -8,6 +8,10 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- `ByteSet::from_byte`: creates a set from a single byte.
+
 ## [0.1.2] - 2020-06-03
 
 ### Removed

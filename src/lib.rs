@@ -522,6 +522,24 @@ impl ByteSet {
         Self([Chunk::max_value(); NUM_SLOTS])
     }
 
+    /// Returns a set containing only `byte`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use byte_set::ByteSet;
+    /// let byte = 42;
+    /// let set = ByteSet::from_byte(byte);
+    ///
+    /// assert_eq!(set.first(), Some(byte));
+    /// assert_eq!(set.last(), Some(byte));
+    /// ```
+    #[inline]
+    #[must_use]
+    pub const fn from_byte(byte: u8) -> Self {
+        byte_set![byte]
+    }
+
     /// Returns a set containing uniformly-distributed random bytes from `rng`.
     ///
     /// This uses [`fill_bytes`] under the hood.
@@ -1441,7 +1459,7 @@ impl Default for ByteSet {
 impl From<u8> for ByteSet {
     #[inline]
     fn from(byte: u8) -> ByteSet {
-        byte_set![byte]
+        ByteSet::from_byte(byte)
     }
 }
 
