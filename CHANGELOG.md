@@ -46,4 +46,4 @@ Initial release!
 [`u8::is_ascii_whitespace`]:   https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_whitespace
 [`u8::is_ascii_control`]:      https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_control
 
-[Unreleased]: https://github.com/nvzqz/static-assertions-rs/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.0...HEAD
