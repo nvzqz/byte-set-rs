@@ -2,11 +2,13 @@
 
 use core::mem;
 
-#[cfg(not(byte_set_chunk_64))]
-pub type Chunk = u32;
+// TODO(#3): Use 64-bit chunk on 32-bit targets with 64-bit instructions.
 
-#[cfg(byte_set_chunk_64)]
+// Not using `usize` in order to work on platforms with other pointer sizes.
+#[cfg(target_pointer_width = "64")]
 pub type Chunk = u64;
+#[cfg(not(target_pointer_width = "64"))]
+pub type Chunk = u32;
 
 const SLOT_NUM_BITS: usize = mem::size_of::<Chunk>() * 8;
 

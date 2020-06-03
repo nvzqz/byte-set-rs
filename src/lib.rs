@@ -468,14 +468,14 @@ pub struct ByteSet([Chunk; NUM_SLOTS]);
 const fn chunk_index_and_shift(byte: u8) -> (usize, usize) {
     let byte = byte as usize;
 
-    #[cfg(byte_set_chunk_64)]
+    #[cfg(target_pointer_width = "64")]
     let index = byte >> 6;
-    #[cfg(byte_set_chunk_64)]
+    #[cfg(target_pointer_width = "64")]
     let shift = byte & 0b0011_1111;
 
-    #[cfg(not(byte_set_chunk_64))]
+    #[cfg(not(target_pointer_width = "64"))]
     let index = byte >> 5;
-    #[cfg(not(byte_set_chunk_64))]
+    #[cfg(not(target_pointer_width = "64"))]
     let shift = byte & 0b0001_1111;
 
     (index, shift)
@@ -493,10 +493,10 @@ impl ByteSet {
         impl fmt::Display for Formatted<'_> {
             fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
                 for chunk in &(self.0).0 {
-                    #[cfg(byte_set_chunk_64)]
+                    #[cfg(target_pointer_width = "64")]
                     write!(f, "{:064b}", chunk)?;
 
-                    #[cfg(not(byte_set_chunk_64))]
+                    #[cfg(not(target_pointer_width = "64"))]
                     write!(f, "{:032b}", chunk)?;
                 }
                 Ok(())
@@ -565,7 +565,7 @@ impl ByteSet {
             & (self.0[2] == 0)
             & (self.0[3] == 0);
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             is_empty
                 & (self.0[4] == 0)
@@ -574,7 +574,7 @@ impl ByteSet {
                 & (self.0[7] == 0)
         }
 
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         is_empty
     }
 
@@ -590,7 +590,7 @@ impl ByteSet {
             & (self.0[2] == !0)
             & (self.0[3] == !0);
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             is_full
                 & (self.0[4] == !0)
@@ -599,7 +599,7 @@ impl ByteSet {
                 & (self.0[7] == !0)
         }
 
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         is_full
     }
 
@@ -613,7 +613,7 @@ impl ByteSet {
             + (self.0[2].count_ones() as usize)
             + (self.0[3].count_ones() as usize);
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             len + (self.0[4].count_ones() as usize)
                 + (self.0[5].count_ones() as usize)
@@ -621,7 +621,7 @@ impl ByteSet {
                 + (self.0[7].count_ones() as usize)
         }
 
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         len
     }
 
@@ -699,7 +699,7 @@ impl ByteSet {
         self.0[2] |= other.0[2];
         self.0[3] |= other.0[3];
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             self.0[4] |= other.0[4];
             self.0[5] |= other.0[5];
@@ -910,13 +910,13 @@ impl ByteSet {
     // Not inlined because lots of code is generated on x86.
     pub const fn reverse_bits(self) -> Self {
         Self([
-            #[cfg(not(byte_set_chunk_64))]
+            #[cfg(not(target_pointer_width = "64"))]
             self.0[7].reverse_bits(),
-            #[cfg(not(byte_set_chunk_64))]
+            #[cfg(not(target_pointer_width = "64"))]
             self.0[6].reverse_bits(),
-            #[cfg(not(byte_set_chunk_64))]
+            #[cfg(not(target_pointer_width = "64"))]
             self.0[5].reverse_bits(),
-            #[cfg(not(byte_set_chunk_64))]
+            #[cfg(not(target_pointer_width = "64"))]
             self.0[4].reverse_bits(),
             self.0[3].reverse_bits(),
             self.0[2].reverse_bits(),
@@ -938,7 +938,7 @@ impl ByteSet {
             & (self.0[2] == other.0[2])
             & (self.0[3] == other.0[3]);
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             eq & (self.0[4] == other.0[4])
                 & (self.0[5] == other.0[5])
@@ -946,7 +946,7 @@ impl ByteSet {
                 & (self.0[7] == other.0[7])
         }
 
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         eq
     }
 
@@ -982,12 +982,12 @@ impl ByteSet {
     ///
     /// [`u8::is_ascii`]: https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii
     pub const ASCII: Self = {
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         {
             Self([!0, !0, 0, 0])
         }
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             Self([!0, !0, !0, !0, 0, 0, 0, 0])
         }

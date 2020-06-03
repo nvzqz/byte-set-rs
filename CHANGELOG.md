@@ -8,6 +8,11 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [Unreleased]
 
+### Removed
+
+- `build.rs`, which improves compile time and allows this to be used in external
+  build systems like Bazel and Buck.
+
 ## [0.1.1] - 2020-06-03
 
 ### Added

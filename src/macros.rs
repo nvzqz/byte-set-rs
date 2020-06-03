@@ -33,7 +33,7 @@ macro_rules! map_reduce_chunks {
     ($this:expr, $other:expr, $map:tt, $reduce:tt) => {{
         // TODO: Might be worth wrapping a `const fn`? This is only being used
         // by binary ops, so this is fine for now.
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         {
             ($this.0[0] $map $other.0[0]) $reduce
             ($this.0[1] $map $other.0[1]) $reduce
@@ -41,7 +41,7 @@ macro_rules! map_reduce_chunks {
             ($this.0[3] $map $other.0[3])
         }
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             ($this.0[0] $map $other.0[0]) $reduce
             ($this.0[1] $map $other.0[1]) $reduce
@@ -61,7 +61,7 @@ macro_rules! map_chunks {
     ($this:expr, $map:tt) => {{
         // TODO: Might be worth wrapping a `const fn`? This is only being used
         // by `!`, so being a prefix op is fine for now.
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         {
             ByteSet([
                 $map $this.0[0], $map $this.0[1],
@@ -69,7 +69,7 @@ macro_rules! map_chunks {
             ])
         }
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             ByteSet([
                 $map $this.0[0], $map $this.0[1],
@@ -80,7 +80,7 @@ macro_rules! map_chunks {
         }
     }};
     ($this:expr, $map:tt, $other:expr) => {{
-        #[cfg(byte_set_chunk_64)]
+        #[cfg(target_pointer_width = "64")]
         {
             ByteSet([
                 ($this.0[0] $map $other.0[0]), ($this.0[1] $map $other.0[1]),
@@ -88,7 +88,7 @@ macro_rules! map_chunks {
             ])
         }
 
-        #[cfg(not(byte_set_chunk_64))]
+        #[cfg(not(target_pointer_width = "64"))]
         {
             ByteSet([
                 ($this.0[0] $map $other.0[0]), ($this.0[1] $map $other.0[1]),
