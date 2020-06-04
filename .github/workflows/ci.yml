@@ -12,6 +12,11 @@ jobs:
   rust-check:
     name: Check
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - i686-unknown-linux-gnu
     steps:
       # Checkout
       - uses: actions/checkout@v1
@@ -22,6 +27,7 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
+          target: ${{ matrix.target }}
           override: true
 
       # Cache
@@ -29,24 +35,28 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.target }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache cargo index
         uses: actions/cache@v1
         with:
           path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.target }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache target dir
         uses: actions/cache@v1
         with:
           path: target
-          key: ${{ runner.os }}-cargo-target-check-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.target }}-cargo-target-check-${{ hashFiles('**/Cargo.lock') }}
 
       # Run
       - name: cargo check
         uses: actions-rs/cargo@v1
         with:
           command: check
+          args: --target ${{ matrix.target }}
 
+  # Benchmarks are only checked on 64-bit because:
+  # - They're not architecture dependent
+  # - Criterion fails to build on 32-bit
   rust-check-benches:
     name: Check Benchmarks
     runs-on: ubuntu-latest
@@ -89,6 +99,11 @@ jobs:
   rust-test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - i686-unknown-linux-gnu
     steps:
       # Checkout
       - uses: actions/checkout@v1
@@ -99,6 +114,7 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
+          target: ${{ matrix.target }}
           override: true
 
       # Cache
@@ -106,23 +122,24 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.target }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache cargo index
         uses: actions/cache@v1
         with:
           path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.target }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache target dir
         uses: actions/cache@v1
         with:
           path: target
-          key: ${{ runner.os }}-cargo-target-test-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.target }}-cargo-target-test-${{ hashFiles('**/Cargo.lock') }}
 
       # Run
       - name: Cargo test
         uses: actions-rs/cargo@v1
         with:
           command: test
+          args: --target ${{ matrix.target }}
 
   rust-fmt:
     name: Format
