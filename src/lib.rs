@@ -419,7 +419,7 @@
 use core::{cmp, fmt, hash, iter::FromIterator, mem, ops, slice};
 
 // Makes `ByteSet::{rand,try_rand}` simpler to express.
-#[cfg(any(test, feature = "rand"))]
+#[cfg(feature = "rand")]
 use rand as rand_core;
 
 #[macro_use]
@@ -545,7 +545,7 @@ impl ByteSet {
     /// This uses [`fill_bytes`] under the hood.
     ///
     /// [`fill_bytes`]: https://docs.rs/rand_core/0.5.*/rand_core/trait.RngCore.html#tymethod.fill_bytes
-    #[cfg(any(test, feature = "rand", feature = "rand_core"))]
+    #[cfg(any(feature = "rand", feature = "rand_core"))]
     #[cfg_attr(docsrs, doc(cfg(any(feature = "rand", feature = "rand_core"))))]
     #[inline]
     pub fn rand<R: rand_core::RngCore>(mut rng: R) -> Self {
@@ -560,7 +560,7 @@ impl ByteSet {
     /// This uses [`try_fill_bytes`] under the hood.
     ///
     /// [`try_fill_bytes`]: https://docs.rs/rand_core/0.5.*/rand_core/trait.RngCore.html#tymethod.try_fill_bytes
-    #[cfg(any(test, feature = "rand", feature = "rand_core"))]
+    #[cfg(any(feature = "rand", feature = "rand_core"))]
     #[cfg_attr(docsrs, doc(cfg(any(feature = "rand", feature = "rand_core"))))]
     #[inline]
     pub fn try_rand<R: rand_core::RngCore>(
@@ -1646,7 +1646,7 @@ impl ops::Not for ByteSet {
 }
 
 // Enables `rand::random::<ByteSet>()`.
-#[cfg(any(test, feature = "rand"))]
+#[cfg(feature = "rand")]
 #[cfg_attr(docsrs, doc(cfg(feature = "rand")))]
 impl rand::distributions::Distribution<ByteSet>
     for rand::distributions::Standard
