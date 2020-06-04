@@ -540,6 +540,90 @@ impl ByteSet {
         byte_set![byte]
     }
 
+    /// Construct a ByteSet from a `RangeTo` value, i.e. `..x`
+    #[inline]
+    #[must_use]
+    pub const fn from_range_to(range: ops::RangeTo<u8>) -> Self {
+        const fn chunk_for(
+            this_chunk: usize,
+            byte_chunk: usize,
+            shift: usize,
+        ) -> Chunk {
+            // the following code is equivalent to
+            // if this_chunk == byte_chunk {
+            //     value
+            // } else if this_chunk < byte_chunk {
+            //     Chunk::max_value()
+            // } else {
+            //     0
+            // }
+            //
+            // Once `if` works in const, this can be cleaned up
+            // https://github.com/rust-lang/rust/pull/72437
+            let value: Chunk = (1 << shift) - 1;
+            let is_equal = (this_chunk == byte_chunk) as usize;
+            let is_less_than = (this_chunk < byte_chunk) as usize;
+            let if_unequal = [0, Chunk::max_value()][is_less_than];
+
+            [if_unequal, value][is_equal]
+        }
+        let (index, shift) = chunk_index_and_shift(range.end);
+        #[cfg(target_pointer_width = "64")]
+        let array = [
+            chunk_for(0, index, shift),
+            chunk_for(1, index, shift),
+            chunk_for(2, index, shift),
+            chunk_for(3, index, shift),
+        ];
+        #[cfg(not(target_pointer_width = "64"))]
+        let array = [
+            chunk_for(0, index, shift),
+            chunk_for(1, index, shift),
+            chunk_for(2, index, shift),
+            chunk_for(3, index, shift),
+            chunk_for(4, index, shift),
+            chunk_for(5, index, shift),
+            chunk_for(6, index, shift),
+            chunk_for(7, index, shift),
+        ];
+        ByteSet(array)
+    }
+
+    /// Construct a ByteSet from a `RangeToInclusive` value, i.e. `..=x`
+    #[inline]
+    #[must_use]
+    pub const fn from_range_to_inclusive(
+        range: ops::RangeToInclusive<u8>,
+    ) -> Self {
+        [
+            Self::full(),
+            Self::from_range_to(..(range.end.wrapping_add(1))),
+        ][(range.end != 255) as usize]
+    }
+
+    /// Construct a ByteSet from a `RangeFrom` value, i.e. `x..`
+    #[inline]
+    #[must_use]
+    pub const fn from_range_from(range: ops::RangeFrom<u8>) -> Self {
+        Self::from_range_to(..range.start).not()
+    }
+
+    /// Construct a ByteSet from a `RangeToInclusive` value, i.e. `x..y`
+    #[inline]
+    #[must_use]
+    pub const fn from_range(range: ops::Range<u8>) -> Self {
+        Self::from_range_from(range.start..)
+            .intersection(Self::from_range_to(..range.end))
+    }
+
+    /// Construct a ByteSet from a `RangeInclusive` value, i.e. `x..=y`
+    #[inline]
+    #[must_use]
+    pub const fn from_range_inclusive(range: ops::RangeInclusive<u8>) -> Self {
+        Self::from_range_from(*range.start()..)
+            .intersection(Self::from_range_to_inclusive(..=*range.end()))
+    }
+
     /// Returns a set containing uniformly-distributed random bytes from `rng`.
     ///
     /// This uses [`fill_bytes`] under the hood.
