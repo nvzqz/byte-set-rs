@@ -47,6 +47,7 @@ jobs:
         with:
           command: check
 
+  rust-check-benches:
     name: Check Benchmarks
     runs-on: ubuntu-latest
     steps:
