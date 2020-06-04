@@ -99,3 +99,36 @@ fn last() {
     assert_last_eq!(set, None);
     assert_eq!(set.pop_last(), None);
 }
+
+#[test]
+fn from_open_ranges() {
+    for byte in 0..=u8::max_value() {
+        let range_to = ..byte;
+        let range_from = byte..;
+        let range_to_i = ..=byte;
+        let set_to = ByteSet::from_range_to(range_to.clone());
+        let set_from = ByteSet::from_range_from(range_from.clone());
+        let set_to_i = ByteSet::from_range_to_inclusive(range_to_i.clone());
+        for b in 0..=u8::max_value() {
+            assert_eq!(range_to.contains(&b), set_to.contains(b));
+            assert_eq!(range_from.contains(&b), set_from.contains(b));
+            assert_eq!(range_to_i.contains(&b), set_to_i.contains(b));
+        }
+    }
+}
+
+#[test]
+fn from_closed_ranges() {
+    for start in 0..=u8::max_value() {
+        for end in start..=u8::max_value() {
+            let range = start..end;
+            let range_i = start..=end;
+            let set = ByteSet::from_range(range.clone());
+            let set_i = ByteSet::from_range_inclusive(range_i.clone());
+            for b in 0..=u8::max_value() {
+                assert_eq!(range.contains(&b), set.contains(b));
+                assert_eq!(range_i.contains(&b), set_i.contains(b));
+            }
+        }
+    }
+}
