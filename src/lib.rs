@@ -1563,6 +1563,48 @@ impl From<&str> for ByteSet {
     }
 }
 
+impl From<ops::Range<u8>> for ByteSet {
+    #[inline]
+    fn from(range: ops::Range<u8>) -> Self {
+        Self::from_range(range)
+    }
+}
+
+impl From<ops::RangeTo<u8>> for ByteSet {
+    #[inline]
+    fn from(range: ops::RangeTo<u8>) -> Self {
+        Self::from_range_to(range)
+    }
+}
+
+impl From<ops::RangeFrom<u8>> for ByteSet {
+    #[inline]
+    fn from(range: ops::RangeFrom<u8>) -> Self {
+        Self::from_range_from(range)
+    }
+}
+
+impl From<ops::RangeInclusive<u8>> for ByteSet {
+    #[inline]
+    fn from(range: ops::RangeInclusive<u8>) -> Self {
+        Self::from_range_inclusive(range)
+    }
+}
+
+impl From<ops::RangeToInclusive<u8>> for ByteSet {
+    #[inline]
+    fn from(range: ops::RangeToInclusive<u8>) -> Self {
+        Self::from_range_to_inclusive(range)
+    }
+}
+
+impl From<ops::RangeFull> for ByteSet {
+    #[inline]
+    fn from(_: ops::RangeFull) -> Self {
+        Self::full()
+    }
+}
+
 impl Extend<u8> for ByteSet {
     fn extend<T: IntoIterator<Item = u8>>(&mut self, iter: T) {
         iter.into_iter().for_each(|byte| self.insert(byte));
