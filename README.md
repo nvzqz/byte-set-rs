@@ -21,7 +21,7 @@ Efficient sets of bytes for Rust, brought to you by [@NikolaiVazquez]!
 
 The star of the show is [`ByteSet`]: an allocation-free sorted set. It is a
 *much faster* alternative to [`HashSet<u8>`], [`BTreeSet<u8>`], and other types
-for a variety to scenarios. See ["Implementation"](#implementation) for a peek
+for a variety of scenarios. See ["Implementation"](#implementation) for a peek
 under the hood.
 
 If you found this library useful, please consider
