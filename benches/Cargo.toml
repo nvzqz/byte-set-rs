@@ -1,0 +1,17 @@
+[package]
+name = "benches"
+version = "0.0.0"
+edition = "2018"
+authors = ["Nikolai Vazquez"]
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+byte_set = { path = ".." }
+criterion = "0.3.2"
+hashbrown = "0.7.2"
+rand = "0.7"
+
+[[bin]]
+name = "benches"
+path = "main.rs"

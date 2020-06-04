@@ -1,3 +1,6 @@
+[workspace]
+members = [".", "benches"]
+
 [package]
 name = "byte_set"
 version = "0.1.2"
@@ -22,11 +25,4 @@ rand = { version = "0.7", default-features = false, optional = true }
 rand_core = { version = "0.5", default-features = false, optional = true }
 
 [dev-dependencies]
-criterion = "0.3.2"
-hashbrown = "0.7.2"
 rand = "0.7"
-
-[[bench]]
-name = "benches"
-path = "benches/main.rs"
-harness = false
