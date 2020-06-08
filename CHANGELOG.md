@@ -11,13 +11,10 @@ This format is based on [Keep a Changelog] and this project adheres to
 ### Added
 
 - `ByteSet::from_byte`: creates a set from a single byte.
-
-## [0.1.2] - 2020-06-03
-
-### Added
-
 - `serde::Serialize` into a `u8` sequence.
 - `serde::Deserialize` from `&[u8]` or a `u8` sequence.
+
+## [0.1.2] - 2020-06-03
 
 ### Removed
 
