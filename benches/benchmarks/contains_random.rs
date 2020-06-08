@@ -95,23 +95,26 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
-        group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
-            b.iter_batched_ref(
-                || {
-                    black_box((
-                        rng.gen::<u8>(),
-                        HashbrownSet::<u8>::rand_len(size, &mut rng),
-                    ))
-                },
-                |(byte, hash_set)| {
-                    black_box(hash_set.contains(byte));
-                },
-                BatchSize::SmallInput,
-            )
-        });
+        group.bench_function(
+            BenchmarkId::new("hashbrown::HashSet<u8>", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        black_box((
+                            rng.gen::<u8>(),
+                            HashbrownSet::<u8>::rand_len(size, &mut rng),
+                        ))
+                    },
+                    |(byte, hash_set)| {
+                        black_box(hash_set.contains(byte));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
 
         group.bench_function(
-            BenchmarkId::new("HashbrownSet<u8> (Identity Hash)", size),
+            BenchmarkId::new("hashbrown::HashSet<u8> (Identity Hash)", size),
             |b| {
                 b.iter_batched_ref(
                     || {

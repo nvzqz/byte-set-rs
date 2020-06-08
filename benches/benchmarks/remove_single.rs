@@ -104,28 +104,34 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
-        group.bench_function(BenchmarkId::new("HashbrownSet<u8>", size), |b| {
-            b.iter_batched_ref(
-                || {
-                    let bytes = shuffled_bytes(&mut rng);
-                    let bytes = &bytes[..size];
+        group.bench_function(
+            BenchmarkId::new("hashbrown::HashSet<u8>", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let bytes = shuffled_bytes(&mut rng);
+                        let bytes = &bytes[..size];
 
-                    if let Some(&byte) = bytes.choose(&mut rng) {
-                        black_box((byte, bytes.iter().cloned().collect()))
-                    } else {
-                        black_box((rng.gen::<u8>(), HashbrownSet::<u8>::new()))
-                    }
-                },
-                |(byte, hash_set)| {
-                    hash_set.remove(byte);
-                    black_box(hash_set);
-                },
-                BatchSize::SmallInput,
-            )
-        });
+                        if let Some(&byte) = bytes.choose(&mut rng) {
+                            black_box((byte, bytes.iter().cloned().collect()))
+                        } else {
+                            black_box((
+                                rng.gen::<u8>(),
+                                HashbrownSet::<u8>::new(),
+                            ))
+                        }
+                    },
+                    |(byte, hash_set)| {
+                        hash_set.remove(byte);
+                        black_box(hash_set);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
 
         group.bench_function(
-            BenchmarkId::new("HashbrownSet<u8> (Identity Hash)", size),
+            BenchmarkId::new("hashbrown::HashSet<u8> (Identity Hash)", size),
             |b| {
                 b.iter_batched_ref(
                     || {
