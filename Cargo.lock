@@ -24,16 +24,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8aac770f1885fd7e387acedd76065302551364496e46b3dd00860b2f8359b9d"
 
 [[package]]
-name = "benches"
-version = "0.0.0"
-dependencies = [
- "byte_set",
- "criterion",
- "hashbrown",
- "rand",
-]
-
-[[package]]
 name = "bitflags"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -61,6 +51,8 @@ checksum = "2e8c087f005730276d1096a652e92a8bacee2e2472bcc9715a74d2bec38b5820"
 name = "byte_set"
 version = "0.1.2"
 dependencies = [
+ "criterion",
+ "hashbrown",
  "rand",
  "rand_core",
  "serde",

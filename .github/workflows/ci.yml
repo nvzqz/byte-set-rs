@@ -47,44 +47,12 @@ jobs:
         with:
           command: check
 
-  rust-check-benches:
-    name: Check Benchmarks
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout
-      - uses: actions/checkout@v1
-
-      # Install
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
-      # Cache
-      - name: Cache cargo registry
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-      - name: Cache cargo index
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
-      - name: Cache target dir
-        uses: actions/cache@v1
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-target-check-benches-${{ hashFiles('**/Cargo.lock') }}
-
       # Run
-      - name: cargo check
+      - name: cargo check benches
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: -p benches
+          args: --bench benches
 
   rust-test:
     name: Test
