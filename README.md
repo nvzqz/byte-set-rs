@@ -42,7 +42,10 @@ If you found this library useful, please consider
    2. [`byte_set!` Macro](#byte_set-macro)
 3. [Implementation](#implementation)
 4. [Benchmarks](#benchmarks)
-5. [License](#license)
+5. [Ecosystem Integrations](#ecosystem-integrations)
+   1. [`rand`](#rand)
+   2. [`serde`](#serde)
+6. [License](#license)
 
 ## Usage
 
@@ -341,6 +344,60 @@ Note that `cargo bench` takes a regular expression, so `Contains (Random)` will
 not work because the parentheses are treated as a capture group. To match
 parentheses, escape them: `Contains \(Random\)`.
 
+## Ecosystem Integrations
+
+This library has extended functionality for some popular crates.
+
+### `rand`
+
+Use the `rand` (or `rand_core`) feature in your [`Cargo.toml`] to enable random
+[`ByteSet`] generation:
+
+```toml
+[dependencies.byte_set]
+version = "0.1.2"
+features = ["rand"]
+```
+
+This makes the following possible:
+
+```rust
+let bytes = rand::random::<ByteSet>();
+
+// Same as above.
+let bytes = ByteSet::rand(rand::thread_rng());
+
+// Handle failure instead of panicking.
+match ByteSet::try_rand(rand::rngs::OsRng) {
+    Ok(bytes)  => // ...
+    Err(error) => // ...
+}
+```
+
+### `serde`
+
+Use the `serde` feature in your [`Cargo.toml`] to enable [`Serialize`] and
+[`Deserialize`] for [`ByteSet`]:
+
+```toml
+[dependencies.byte_set]
+version = "0.1.2"
+features = ["serde"]
+```
+
+This makes the following possible:
+
+```rust
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
+struct MyValue {
+    bytes: ByteSet
+}
+```
+
+Read more about using `serde` at [serde.rs](https://serde.rs/).
+
 ## License
 
 This project is released under either:
@@ -362,6 +419,9 @@ at your choosing.
 [`HashSet<u8>`]:    https://doc.rust-lang.org/std/collections/struct.HashSet.html
 [`u8`]:             https://doc.rust-lang.org/std/primitive.u8.html
 [`vec!`]:           https://doc.rust-lang.org/std/macro.vec.html
+
+[`Serialize`]:   https://docs.rs/serde/1.*/serde/trait.Serialize.html
+[`Deserialize`]: https://docs.rs/serde/1.*/serde/trait.Deserialize.html
 
 [#3]: https://github.com/nvzqz/byte-set-rs/issues/3
 
