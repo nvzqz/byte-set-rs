@@ -396,6 +396,9 @@ struct MyValue {
 }
 ```
 
+[`ByteSet`] can be serialized into a `u8` sequence, and deserialized from
+`&[u8]` or a `u8` sequence.
+
 Read more about using `serde` at [serde.rs](https://serde.rs/).
 
 ## License
