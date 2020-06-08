@@ -1770,3 +1770,59 @@ impl rand::distributions::Distribution<ByteSet>
         ByteSet::rand(rng)
     }
 }
+
+#[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
+impl serde::Serialize for ByteSet {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeSeq;
+
+        let mut seq = serializer.serialize_seq(Some(self.len()))?;
+        for byte in *self {
+            seq.serialize_element(&byte)?;
+        }
+        seq.end()
+    }
+}
+
+#[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
+impl<'de> serde::Deserialize<'de> for ByteSet {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct ByteSetVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for ByteSetVisitor {
+            type Value = ByteSet;
+
+            fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
+                f.write_str("a set of bytes")
+            }
+
+            fn visit_bytes<E>(self, v: &[u8]) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                Ok(v.into())
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::SeqAccess<'de>,
+            {
+                let mut set = ByteSet::new();
+                while let Some(byte) = seq.next_element::<u8>()? {
+                    set.insert(byte);
+                }
+                Ok(set)
+            }
+        }
+
+        deserializer.deserialize_seq(ByteSetVisitor)
+    }
+}

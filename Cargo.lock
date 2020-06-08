@@ -63,6 +63,7 @@ version = "0.1.2"
 dependencies = [
  "rand",
  "rand_core",
+ "serde",
 ]
 
 [[package]]

@@ -14,6 +14,11 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [0.1.2] - 2020-06-03
 
+### Added
+
+- `serde::Serialize` into a `u8` sequence.
+- `serde::Deserialize` from `&[u8]` or a `u8` sequence.
+
 ### Removed
 
 - `build.rs`, which improves compile time and allows this to be used in external
@@ -58,6 +63,9 @@ Initial release!
 [`u8::is_ascii_graphic`]:      https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_graphic
 [`u8::is_ascii_whitespace`]:   https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_whitespace
 [`u8::is_ascii_control`]:      https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_control
+
+[`serde::Serialize`]:   https://docs.rs/serde/1.*/serde/trait.Serialize.html
+[`serde::Deserialize`]: https://docs.rs/serde/1.*/serde/trait.Deserialize.html
 
 [Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.2...HEAD
 [0.1.2]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.1...v0.1.2
