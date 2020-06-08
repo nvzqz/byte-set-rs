@@ -97,32 +97,30 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
-        group.bench_function(
+        let hash_set = HashbrownSet::<u8>::rand_len(size, &mut rng);
+        group.bench_with_input(
             BenchmarkId::new("hashbrown::HashSet<u8>", size),
-            |b| {
-                b.iter_batched_ref(
-                    || black_box(HashbrownSet::<u8>::rand_len(size, &mut rng)),
-                    |hash_set| {
-                        hash_set.clear();
-                        black_box(hash_set);
+            &hash_set,
+            |b, hash_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(hash_set.contains(&byte));
                     },
                     BatchSize::SmallInput,
                 )
             },
         );
 
-        group.bench_function(
+        let hash_set = IdentityHashbrownSet::<u8>::rand_len(size, &mut rng);
+        group.bench_with_input(
             BenchmarkId::new("hashbrown::HashSet<u8> (Identity Hash)", size),
-            |b| {
-                b.iter_batched_ref(
-                    || {
-                        black_box(IdentityHashbrownSet::<u8>::rand_len(
-                            size, &mut rng,
-                        ))
-                    },
-                    |hash_set| {
-                        hash_set.clear();
-                        black_box(hash_set);
+            &hash_set,
+            |b, hash_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(hash_set.contains(&byte));
                     },
                     BatchSize::SmallInput,
                 )
