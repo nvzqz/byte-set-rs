@@ -76,6 +76,27 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
+        group.bench_function(
+            BenchmarkId::new("fixedbitset::FixedBitSet", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        black_box(fixedbitset::FixedBitSet::rand_len(
+                            size, &mut rng,
+                        ))
+                    },
+                    |fixed_bit_set| {
+                        // The `.ones()` iterator goes over all set bits, making
+                        // it equivalent to the others.
+                        for one in fixed_bit_set.ones() {
+                            black_box(one);
+                        }
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || black_box(BTreeSet::<u8>::rand_len(size, &mut rng)),

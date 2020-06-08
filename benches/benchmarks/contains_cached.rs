@@ -127,6 +127,21 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
+        let fixed_bit_set = fixedbitset::FixedBitSet::rand_len(size, &mut rng);
+        group.bench_with_input(
+            BenchmarkId::new("fixedbitset::FixedBitSet", size),
+            &fixed_bit_set,
+            |b, fixed_bit_set| {
+                b.iter_batched(
+                    || rng.gen::<u8>(),
+                    |byte| {
+                        black_box(fixed_bit_set.contains(byte as usize));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         let btree_set = BTreeSet::<u8>::rand_len(size, &mut rng);
         group.bench_with_input(
             BenchmarkId::new("BTreeSet<u8>", size),

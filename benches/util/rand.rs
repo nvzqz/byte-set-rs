@@ -1,4 +1,5 @@
 use byte_set::ByteSet;
+use fixedbitset::FixedBitSet;
 use hashbrown::HashSet as HashbrownSet;
 use rand::{seq::SliceRandom, Rng};
 use std::{
@@ -59,7 +60,18 @@ impl Rand for Vec<u8> {
     }
 }
 
-// Hashbrown:
+// 3rd party collections:
+
+impl Rand for FixedBitSet {
+    fn rand_len<R: Rng>(len: usize, rng: &mut R) -> Self {
+        let input = shuffled_bytes(rng);
+        input[..len]
+            .iter()
+            .cloned()
+            .map(|byte| byte as usize)
+            .collect()
+    }
+}
 
 impl<S: BuildHasher + Default> Rand for HashbrownSet<u8, S> {
     fn rand_len<R: Rng>(len: usize, rng: &mut R) -> Self {

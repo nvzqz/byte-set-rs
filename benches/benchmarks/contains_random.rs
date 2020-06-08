@@ -133,6 +133,24 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
+        group.bench_function(
+            BenchmarkId::new("fixedbitset::FixedBitSet", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        black_box((
+                            rng.gen::<u8>(),
+                            fixedbitset::FixedBitSet::rand_len(size, &mut rng),
+                        ))
+                    },
+                    |(byte, fixed_bit_set)| {
+                        black_box(fixed_bit_set.contains(*byte as usize));
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {

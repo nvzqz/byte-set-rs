@@ -156,6 +156,41 @@ pub fn benches(criterion: &mut Criterion) {
             },
         );
 
+        group.bench_function(
+            BenchmarkId::new("fixedbitset::FixedBitSet", size),
+            |b| {
+                b.iter_batched_ref(
+                    || {
+                        let bytes = shuffled_bytes(&mut rng);
+                        let bytes = &bytes[..size];
+
+                        if let Some(&byte) = bytes.choose(&mut rng) {
+                            black_box((
+                                byte as usize,
+                                bytes
+                                    .iter()
+                                    .cloned()
+                                    .map(|byte| byte as usize)
+                                    .collect(),
+                            ))
+                        } else {
+                            black_box((
+                                rng.gen::<u8>() as usize,
+                                fixedbitset::FixedBitSet::default(),
+                            ))
+                        }
+                    },
+                    |(byte, fixed_bit_set)| {
+                        if fixed_bit_set.len() != 0 {
+                            fixed_bit_set.set(*byte as usize, false);
+                        }
+                        black_box(fixed_bit_set);
+                    },
+                    BatchSize::SmallInput,
+                )
+            },
+        );
+
         group.bench_function(BenchmarkId::new("BTreeSet<u8>", size), |b| {
             b.iter_batched_ref(
                 || {
