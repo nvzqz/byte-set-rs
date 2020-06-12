@@ -1710,32 +1710,12 @@ impl PartialOrd for ByteSet {
     fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
         Some(self.cmp(other))
     }
-
-    #[inline]
-    fn lt(&self, other: &Self) -> bool {
-        self.as_bytes().lt(other.as_bytes())
-    }
-
-    #[inline]
-    fn le(&self, other: &Self) -> bool {
-        self.as_bytes().le(other.as_bytes())
-    }
-
-    #[inline]
-    fn gt(&self, other: &Self) -> bool {
-        self.as_bytes().gt(other.as_bytes())
-    }
-
-    #[inline]
-    fn ge(&self, other: &Self) -> bool {
-        self.as_bytes().ge(other.as_bytes())
-    }
 }
 
 impl Ord for ByteSet {
     #[inline]
     fn cmp(&self, other: &Self) -> cmp::Ordering {
-        self.as_bytes().cmp(other.as_bytes())
+        self.into_iter().cmp(other.into_iter())
     }
 }
 

@@ -8,6 +8,12 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- **\[Breaking\]** Comparison functions in [`PartialOrd`] and [`Ord`] are based
+  on lexicographical order of the contained bytes. Previously they were just a
+  `memcmp`, regardless of architecture.
+
 ## [0.1.3] - 2020-06-12
 
 ### Added
@@ -53,6 +59,8 @@ Initial release!
 [Keep a Changelog]:    http://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: http://semver.org/spec/v2.0.0.html
 
+[`PartialOrd`]:                https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html
+[`Ord`]:                       https://doc.rust-lang.org/std/cmp/trait.Ord.html
 [`u8::is_ascii_alphabetic`]:   https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_alphabetic
 [`u8::is_ascii_uppercase`]:    https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_uppercase
 [`u8::is_ascii_lowercase`]:    https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_lowercase
