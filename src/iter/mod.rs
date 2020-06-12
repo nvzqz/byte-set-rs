@@ -65,6 +65,19 @@ impl Iterator for Iter {
         None
     }
 
+    fn for_each<F>(mut self, mut f: F)
+    where
+        F: FnMut(u8),
+    {
+        (0..NUM_SLOTS).for_each(|index| {
+            let chunk = &mut self.byte_set.0[index];
+
+            while let Some(lsb) = chunk::pop_lsb(chunk) {
+                f(lsb + (index * chunk::INDEX_OFFSET) as u8);
+            }
+        });
+    }
+
     #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         let len = self.len();
