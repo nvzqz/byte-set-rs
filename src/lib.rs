@@ -1552,6 +1552,9 @@ impl ByteSet {
 }
 
 /// Operations over the internal memory representation.
+///
+/// There are currently no stability guarantees over the internal bytes. This is
+/// being tracked in [#8](https://github.com/nvzqz/byte-set-rs/issues/8).
 impl ByteSet {
     const SIZE: usize = mem::size_of::<Self>();
 
