@@ -48,8 +48,6 @@ Initial release!
 [Keep a Changelog]:    http://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: http://semver.org/spec/v2.0.0.html
 
-[Bloom filter]: https://en.wikipedia.org/wiki/Bloom_filter
-
 [`u8::is_ascii_alphabetic`]:   https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_alphabetic
 [`u8::is_ascii_uppercase`]:    https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_uppercase
 [`u8::is_ascii_lowercase`]:    https://doc.rust-lang.org/std/primitive.u8.html#method.is_ascii_lowercase
