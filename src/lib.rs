@@ -1715,6 +1715,8 @@ impl PartialOrd for ByteSet {
 impl Ord for ByteSet {
     #[inline]
     fn cmp(&self, other: &Self) -> cmp::Ordering {
+        // TODO: Optimize using internal representation while keeping semantics.
+        // See https://github.com/nvzqz/byte-set-rs/issues/9.
         self.into_iter().cmp(other.into_iter())
     }
 }
