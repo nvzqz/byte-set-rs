@@ -13,6 +13,9 @@ This format is based on [Keep a Changelog] and this project adheres to
 - `ByteSet::from_byte`: creates a set from a single byte.
 - `serde::Serialize` into a `u8` sequence.
 - `serde::Deserialize` from `&[u8]` or a `u8` sequence.
+- Conversions from range types that can be used in `const` ([#5] by [@Manishearth]).
+- Manual implementation of `Iter::for_each` that's slightly more optimized than
+  the default.
 
 ## [0.1.2] - 2020-06-03
 
@@ -65,3 +68,7 @@ Initial release!
 [Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.2...HEAD
 [0.1.2]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.1...v0.1.2
 [0.1.1]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.0...v0.1.1
+
+[#5]: https://github.com/nvzqz/byte-set-rs/pull/5
+
+[@Manishearth]: https://github.com/Manishearth
