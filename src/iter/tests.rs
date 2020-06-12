@@ -46,3 +46,21 @@ fn contains_full_rev() {
         assert_not_contains!(iter.byte_set, byte);
     }
 }
+
+#[test]
+fn ord() {
+    let full = ByteSet::full().into_iter();
+    assert_eq!(
+        full.collect::<Vec<u8>>(),
+        (0..=u8::max_value()).collect::<Vec<u8>>(),
+    );
+}
+
+#[test]
+fn ord_rev() {
+    let full = ByteSet::full().into_iter();
+    assert_eq!(
+        full.rev().collect::<Vec<u8>>(),
+        (0..=u8::max_value()).rev().collect::<Vec<u8>>(),
+    );
+}
