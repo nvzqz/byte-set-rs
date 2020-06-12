@@ -54,7 +54,7 @@ following to your project's [`Cargo.toml`]:
 
 ```toml
 [dependencies]
-byte_set = "0.1.2"
+byte_set = "0.1.3"
 ```
 
 To import the [`byte_set!`] macro, add this to your crate root (`main.rs` or
@@ -355,7 +355,7 @@ Use the `rand` (or `rand_core`) feature in your [`Cargo.toml`] to enable random
 
 ```toml
 [dependencies.byte_set]
-version = "0.1.2"
+version = "0.1.3"
 features = ["rand"]
 ```
 
@@ -381,7 +381,7 @@ Use the `serde` feature in your [`Cargo.toml`] to enable [`Serialize`] and
 
 ```toml
 [dependencies.byte_set]
-version = "0.1.2"
+version = "0.1.3"
 features = ["serde"]
 ```
 
@@ -429,22 +429,22 @@ at your choosing.
 [#3]: https://github.com/nvzqz/byte-set-rs/issues/3
 
 <!-- These links must be replaced with local ones when used in crate docs: -->
-[`byte_set!`]:          https://docs.rs/byte_set/0.1.2/byte_set/macro.byte_set.html
-[`ByteSet`]:            https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html
-[`contains_any`]:       https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.contains_any
-[`contains`]:           https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.contains
-[`extend`]:             https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#impl-Extend%3Cu8%3E
-[`first`]:              https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.first
-[`insert_all`]:         https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.insert_all
-[`insert`]:             https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.insert
-[`inserting_all`]:      https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.inserting_all
-[`inserting`]:          https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.inserting
-[`last`]:               https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.last
-[`remove_all`]:         https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.remove_all
-[`remove`]:             https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.remove
-[`removing_all`]:       https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.removing_all
-[`removing`]:           https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.removing
-[`is_strict_subset`]:   https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.is_strict_subset
-[`is_subset`]:          https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.is_subset
-[`is_strict_superset`]: https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.is_strict_superset
-[`is_superset`]:        https://docs.rs/byte_set/0.1.2/byte_set/struct.ByteSet.html#method.is_superset
+[`byte_set!`]:          https://docs.rs/byte_set/0.1.3/byte_set/macro.byte_set.html
+[`ByteSet`]:            https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html
+[`contains_any`]:       https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.contains_any
+[`contains`]:           https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.contains
+[`extend`]:             https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#impl-Extend%3Cu8%3E
+[`first`]:              https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.first
+[`insert_all`]:         https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.insert_all
+[`insert`]:             https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.insert
+[`inserting_all`]:      https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.inserting_all
+[`inserting`]:          https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.inserting
+[`last`]:               https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.last
+[`remove_all`]:         https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.remove_all
+[`remove`]:             https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.remove
+[`removing_all`]:       https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.removing_all
+[`removing`]:           https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.removing
+[`is_strict_subset`]:   https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.is_strict_subset
+[`is_subset`]:          https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.is_subset
+[`is_strict_superset`]: https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.is_strict_superset
+[`is_superset`]:        https://docs.rs/byte_set/0.1.3/byte_set/struct.ByteSet.html#method.is_superset

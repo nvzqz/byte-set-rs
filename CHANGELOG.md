@@ -8,6 +8,8 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [Unreleased]
 
+## [0.1.3] - 2020-06-12
+
 ### Added
 
 - `ByteSet::from_byte`: creates a set from a single byte.
@@ -65,7 +67,8 @@ Initial release!
 [`serde::Serialize`]:   https://docs.rs/serde/1.*/serde/trait.Serialize.html
 [`serde::Deserialize`]: https://docs.rs/serde/1.*/serde/trait.Deserialize.html
 
-[Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/nvzqz/byte-set-rs/compare/v0.1.3...HEAD
+[0.1.3]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.2...v0.1.3
 [0.1.2]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.1...v0.1.2
 [0.1.1]:      https://github.com/nvzqz/byte-set-rs/compare/v0.1.0...v0.1.1
 
