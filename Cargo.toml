@@ -28,6 +28,10 @@ fixedbitset = "0.3.0"
 hashbrown = "0.7.2"
 rand = "0.7"
 
+[features]
+std = ["alloc"]
+alloc = []
+
 [[bench]]
 name = "benches"
 path = "benches/main.rs"

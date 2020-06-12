@@ -8,6 +8,12 @@ This format is based on [Keep a Changelog] and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- `PartialEq<HashSet<u8, S>>` implementation for `ByteSet`.
+- `PartialEq<BTreeSet<u8>>` implementation for `ByteSet`.
+- `PartialOrd<BTreeSet<u8>>` implementation for `ByteSet`.
+
 ### Changed
 
 - **\[Breaking\]** Comparison functions in [`PartialOrd`] and [`Ord`] are based

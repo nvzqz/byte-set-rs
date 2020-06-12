@@ -476,8 +476,16 @@
 //! [`is_superset`]:        struct.ByteSet.html#method.is_superset
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![cfg_attr(not(test), no_std)]
+#![cfg_attr(not(any(test, feature = "std")), no_std)]
 #![warn(missing_docs)]
+
+#[cfg(any(test, feature = "std"))]
+use std::collections::HashSet;
+
+#[cfg(any(test, feature = "alloc"))]
+extern crate alloc;
+#[cfg(any(test, feature = "alloc"))]
+use alloc::collections::BTreeSet;
 
 use core::{cmp, fmt, hash, iter::FromIterator, mem, ops, slice};
 
@@ -1804,6 +1812,45 @@ impl ops::Not for ByteSet {
     #[inline]
     fn not(self) -> Self::Output {
         ByteSet::not(self)
+    }
+}
+
+#[cfg(any(test, feature = "std"))]
+impl<S> PartialEq<HashSet<u8, S>> for ByteSet {
+    fn eq(&self, other: &HashSet<u8, S>) -> bool {
+        if self.len() != other.len() {
+            return false;
+        }
+
+        // Using `ByteSet::contains` instead of zipping the iterators because
+        // it's much cheaper than iterating `ByteSet`.
+        //
+        // Although iterating over `HashSet` is slightly slower than `ByteSet`,
+        // `HashSet::contains` is significantly slower.
+        other.iter().all(|&byte| self.contains(byte))
+    }
+}
+
+#[cfg(any(test, feature = "alloc"))]
+impl PartialEq<BTreeSet<u8>> for ByteSet {
+    fn eq(&self, other: &BTreeSet<u8>) -> bool {
+        if self.len() != other.len() {
+            return false;
+        }
+
+        // Using `ByteSet::contains` instead of zipping the iterators because
+        // it's much cheaper than iterating `ByteSet`.
+        //
+        // Although iterating over `BTreeSet` is slightly slower than `ByteSet`,
+        // `BTreeSet::contains` is significantly slower.
+        other.iter().all(|&byte| self.contains(byte))
+    }
+}
+
+#[cfg(any(test, feature = "alloc"))]
+impl PartialOrd<BTreeSet<u8>> for ByteSet {
+    fn partial_cmp(&self, other: &BTreeSet<u8>) -> Option<cmp::Ordering> {
+        Some(self.into_iter().cmp(other.iter().cloned()))
     }
 }
 
