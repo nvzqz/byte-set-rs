@@ -1566,6 +1566,12 @@ impl ByteSet {
 impl ByteSet {
     const SIZE: usize = mem::size_of::<Self>();
 
+    /// Returns the underlying bytes of `self`.
+    #[inline]
+    pub fn into_bytes(self) -> [u8; Self::SIZE] {
+        unsafe { mem::transmute(self) }
+    }
+
     /// Returns a shared reference to the underlying bytes of `self`.
     #[inline]
     pub fn as_bytes(&self) -> &[u8; Self::SIZE] {
