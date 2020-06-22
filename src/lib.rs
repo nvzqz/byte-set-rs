@@ -1624,10 +1624,24 @@ impl From<&[u8]> for ByteSet {
     }
 }
 
+impl From<&mut [u8]> for ByteSet {
+    #[inline]
+    fn from(bytes: &mut [u8]) -> Self {
+        (bytes as &[u8]).into()
+    }
+}
+
 impl From<&str> for ByteSet {
     #[inline]
     fn from(s: &str) -> Self {
         s.as_bytes().into()
+    }
+}
+
+impl From<&mut str> for ByteSet {
+    #[inline]
+    fn from(s: &mut str) -> Self {
+        (s as &str).into()
     }
 }
 
