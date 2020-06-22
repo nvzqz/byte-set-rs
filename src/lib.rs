@@ -1717,8 +1717,6 @@ impl fmt::Debug for ByteSet {
     }
 }
 
-// This is implemented manually over `[u8; 32]` because it seems to produce
-// better code than `[usize; N]`.
 impl PartialOrd for ByteSet {
     #[inline]
     fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
