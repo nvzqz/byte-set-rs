@@ -531,7 +531,7 @@ const LAST_SLOT_INDEX: usize = NUM_SLOTS - 1;
 ///
 /// [`u8`]: https://doc.rust-lang.org/std/primitive.u8.html
 #[derive(Clone, Copy, PartialEq, Eq)]
-#[repr(transparent)]
+#[repr(C)]
 pub struct ByteSet([Chunk; NUM_SLOTS]);
 
 /// Returns the chunk index for `byte` and the bit shift for that chunk.
