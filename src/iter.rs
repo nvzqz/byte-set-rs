@@ -1,9 +1,6 @@
 use crate::{chunk, ByteSet, LAST_SLOT_INDEX, NUM_SLOTS};
 use core::iter;
 
-#[cfg(test)]
-mod tests;
-
 /// An iterator over a [`ByteSet`].
 ///
 /// [`ByteSet`]: struct.ByteSet.html

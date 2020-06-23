@@ -34,7 +34,7 @@ fn contains_full() {
     let iter = &mut ByteSet::full().into_iter();
 
     while let Some(byte) = iter.next() {
-        assert_not_contains!(iter.byte_set, byte);
+        assert_not_contains!(iter.into_byte_set(), byte);
     }
 }
 
@@ -43,7 +43,7 @@ fn contains_full_rev() {
     let iter = &mut ByteSet::full().into_iter();
 
     while let Some(byte) = iter.next_back() {
-        assert_not_contains!(iter.byte_set, byte);
+        assert_not_contains!(iter.into_byte_set(), byte);
     }
 }
 

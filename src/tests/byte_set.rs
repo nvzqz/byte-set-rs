@@ -1,4 +1,4 @@
-use super::ByteSet;
+use crate::ByteSet;
 
 #[test]
 fn len() {

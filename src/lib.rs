@@ -497,10 +497,6 @@ use rand as rand_core;
 mod macros;
 
 #[cfg(test)]
-#[macro_use]
-mod tests_macros;
-
-#[cfg(test)]
 mod tests;
 
 pub(crate) mod chunk;
