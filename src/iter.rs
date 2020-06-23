@@ -1,4 +1,4 @@
-use crate::{chunk, ByteSet, LAST_SLOT_INDEX, NUM_SLOTS};
+use crate::{chunk, ByteSet};
 use core::iter;
 
 /// An iterator over a [`ByteSet`].
@@ -23,7 +23,7 @@ impl Iter {
         Self {
             byte_set,
             forward_index: 0,
-            backward_index: LAST_SLOT_INDEX,
+            backward_index: ByteSet::LAST_SLOT_INDEX,
         }
     }
 
@@ -47,7 +47,7 @@ impl Iterator for Iter {
     type Item = u8;
 
     fn next(&mut self) -> Option<u8> {
-        let range = self.forward_index..NUM_SLOTS;
+        let range = self.forward_index..ByteSet::NUM_SLOTS;
 
         for index in range {
             self.forward_index = index;
@@ -66,7 +66,7 @@ impl Iterator for Iter {
     where
         F: FnMut(u8),
     {
-        (0..NUM_SLOTS).for_each(|index| {
+        (0..ByteSet::NUM_SLOTS).for_each(|index| {
             let chunk = &mut self.byte_set.0[index];
 
             while let Some(lsb) = chunk::pop_lsb(chunk) {
